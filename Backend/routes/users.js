@@ -1,10 +1,8 @@
 //Se importan las librerias y archivos necesarios
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
-const db = require("../services/mongo_conection");
 const user_controller = require('../controllers/user');
-const { route } = require("./post");
+const multer = require('multer')
 
 var storage = multer.diskStorage({
   destination: '../Frontend/static/users/',
@@ -16,12 +14,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
-router.get('/', user_controller.getUsers)
+router.get('/', user_controller.getUser)
 router.post('/saveFile', upload.single('file'), user_controller.saveFile)
-
-
-
-
-
 
 module.exports = router;

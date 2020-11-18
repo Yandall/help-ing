@@ -1,6 +1,6 @@
 const db = require('../services/mongoDB')
 
-let  getUser = async (req,res)  => {
+async function getUser (req,res)  {
     const connection = await db.getConnection()
     try{
         var filter = {'email ' : req.email}
