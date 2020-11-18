@@ -1,22 +1,21 @@
 const db = require('../services/mongoDB')
 const fs = require('fs')
 
-
 async function getPosts(req,res) {
     const connection = await db.getConnection()
     try {
-        let pageNumber = 0
+        let pageNumber = req.params.page
         let nPerPage = 5
         let filter = ''
-        filter = filter === '' ? ({'_id' : {'$ne' : 0}}) : filter
+        filter = filter === '' ? ({}) : filter
         let dbo = connection.db('helping')
         let cursor = dbo.collection('posts').find(filter)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
             .limit(nPerPage)
         let values = await cursor.toArray()
+        let cantPosts = await dbo.collection('posts').countDocuments({})
 
-        console.log(values)
-        res.status(200).send(values)
+        res.status(200).send({values, cantPosts})
     } catch (e) {
         res.status(500).send('Hubo un error')
         console.log(e)
@@ -26,7 +25,7 @@ async function getPosts(req,res) {
     }
 }
 
-async function createPost(data) {
+async function createPost(data= {}) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
@@ -62,5 +61,5 @@ async function saveFile(req, res) {
 }
 
 module.exports = {
-    getPosts, createPost, saveFile
+    getPosts, saveFile
 }

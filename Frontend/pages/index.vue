@@ -3,11 +3,11 @@
     <div>
       <h1 class="title">Helping
         <b-button variant="success" size="lg" :to="{name: 'createPost'}" style="margin: 30px 0 15px 0">Create!</b-button>
-
       </h1>
-            
+
       <b-list-group>
-        <b-list-group-item :key="item._id" v-for="item in post_list" class="card-post" style = "border: none"><b-card
+        <b-list-group-item :key="item._id" v-for="item in post_list" class="card-post" style = "border: none">
+          <b-card
           :title="item.title"
           :img-src="'posts/' + item.file"
           img-alt=""
@@ -15,15 +15,19 @@
           tag="article"
           style="max-width: 60rem;"
           class="mb-2"
-          :footer="item.author + ' ' + item.post_date"
-          >
+          :footer="item.author + ' ' + item.post_date">
           <b-card-text>
             {{item.body}}
           </b-card-text>
         </b-card>
-  </b-list-group-item>
+        </b-list-group-item>
       </b-list-group>
-      
+
+      <div class="overflow-auto">
+        <b-pagination-nav :link-gen="linkGen" :number-of-pages="numberPages" use-router @change="loadPosts($event)"
+        align="center"></b-pagination-nav>
+      </div>
+
     </div>
   </div>
 </template>
@@ -34,7 +38,7 @@ import config from "../assets/config"
 
 export default {
   beforeMount() {
-    this.loadPosts()
+    this.loadPosts(new URLSearchParams(location.search).get('page'))
   },
   data(){
     return {
@@ -49,28 +53,37 @@ export default {
         {
           key:"body",
           label:"Body"
-          
+
         }
-      ]
+      ],
+      numberPages: 3,
+      perPage: 5
     }
   },
   methods: {
-    loadPosts() {
-      Axios.get(this.url)
+    loadPosts(index) {
+      index = index || 1
+      Axios.get(this.url + '/' + index, {headers: {'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',}})
         .then(res => {
-          let data = res.data
+          let data = res.data.values
           data.forEach(item => {
-            console.log( item.post_date)
             item.post_date = item.post_date.substring(0, 10)
           })
-          this.post_list = res.data;
+          this.post_list = data;
+          this.numberPages = Math.ceil((res.data.cantPosts / this.perPage))
+          console.log(this.numberPages)
         })
         .catch(e => {
           console.log(e);
         });
     },
+    linkGen(pageNum) {
+      return pageNum === 1 ? '?' : `?page=${pageNum}`
+    },
   }
-  
+
 }
 </script>
 
