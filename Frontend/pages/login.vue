@@ -41,7 +41,7 @@
             >
           </b-form-group>
 
-          <b-button @click="login()" type="submit" block variant="danger"
+          <b-button  @click="login()" block variant="danger"
             >Ingresar</b-button
           >
 
@@ -90,7 +90,8 @@
               >
                 <b-form-input
                   id="password"
-                  v-model="usuario.nickname"
+                  v-model="usuario.clave"
+                  type = "password"
                   :state="estado_clave"
                   required
                 ></b-form-input>
@@ -106,7 +107,7 @@
                 ></b-form-file>
               </b-form-group>
             </form>
-           <b-button type="submit" variant="outline-danger">Crear cuenta</b-button>
+           <b-button @click="crearCuenta(file)" variant="outline-danger">Crear cuenta</b-button>
           </b-modal>
         </b-form>
         <br />
@@ -116,7 +117,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import Axios from "axios";
 
 export default {
   beforeMount() {
@@ -140,6 +141,9 @@ export default {
   },
 
   computed: {
+    fileName(){
+      return this.file.name
+    },
     validar_email() {
       return this.usuario.email.length > 0;
     },
@@ -151,6 +155,7 @@ export default {
   methods: {
     onSubmit(evt){
       evt.preventDefault()
+      this.crearCuenta(this.file)
 
     },
     carga_pagina() {
@@ -161,7 +166,7 @@ export default {
       let url = "http://localhost:8080/" + "users/" + this.usuario.email + "/" + this.usuario.clave;
 
       if (this.usuario.email.length > 0 && this.usuario.clave.length > 0) {
-        axios
+        Axios
           .get(url)
           .then(response => {
             let data = response.data;
@@ -179,6 +184,24 @@ export default {
         alert("LLene todos los campos correctamente");
       }
     },
+    async crearCuenta(file){
+      console.log("ENTRO")
+      console.log(file)
+      try {
+        var formData = new FormData()
+        formData.append('file',file)
+        formData.append('nickname', this.usuario.nickname)
+        formData.append('email',this.usuario.email)
+        formData.append('password',this.usuario.clave)
+        formData.append('range', this.usuario.range)
+        const url = "http://localhost:8080/users/saveUser"
+        const res = await Axios.post(url,formData)
+        alert(res.data)
+      }catch(e){
+        console.error(e)
+      }
+
+    },
 
     mostrar_modal() {
       this.$refs["my-modal"].show();
@@ -195,18 +218,6 @@ export default {
       this.$refs["my-modal-pass"].hide();
     },
 
-    solicitar_cuenta() {
-      if (!this.validar()) {
-        return;
-      }
-      axios
-        .post(this.url + "emails/request", this.usuario)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => console.log(error));
-      this.ocultar_modal();
-    },
 
     validar() {
       const valid = this.$refs.form.checkValidity();

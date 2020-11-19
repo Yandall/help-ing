@@ -33,25 +33,25 @@ async function createUser(data) {
 
 }
 
-async function saveFile(req, res) {
+async function saveUser(req, res) {
+    console.log(req.body)
     try {
         let user = {
             nickname: req.body.nickname,
             password: req.body.password,
             email: req.body.email,
-            range: req.body.range,
+            range: parseInt(req.body.range),
             image: req.file.originalname
         }
-        console.log(post.post_date)
         await createUser(user)
         res.status(200).send('Post creado')
     } catch(e) {
-        res.status(500).send('Error al crear el post')
-        console.error(e)
+        res.status(500).send(e)
+        console.error("Error al crear")
     }
 
 }
 
 module.exports = {
-    getUser, createUser, saveFile
+    getUser, createUser, saveUser
 }
