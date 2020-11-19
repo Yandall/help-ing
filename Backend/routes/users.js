@@ -14,7 +14,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
-router.get('/', user_controller.getUser)
+router.get('/:email/:password', user_controller.getUser)
 router.post('/saveFile', upload.single('file'), user_controller.saveFile)
 
 module.exports = router;

@@ -4,7 +4,6 @@
       <h1 class="title">Helping
         <b-button variant="success" size="lg" :to="{name: 'createPost'}" style="margin: 30px 0 15px 0">Create!</b-button>
       </h1>
-        <b-button variant="success" size="lg" :to="{name: 'login'}" style="margin: 30px 0 15px 0">Login!</b-button>
       <b-list-group>
         <b-list-group-item :key="item._id" v-for="item in post_list" class="card-post" style = "border: none">
           <b-card

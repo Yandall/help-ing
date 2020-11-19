@@ -5,27 +5,21 @@
         <!-- Content here -->
 
         <div class="container_login">
-          <b-img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Escudo_Universidad_de_Medellin.svg/240px-Escudo_Universidad_de_Medellin.svg.png"
-            fluid
-            alt="Fluid image"
-            width="80px"
-          ></b-img>
           <div class="tittle">{{ message }}</div>
         </div>
 
         <br />
 
         <b-form action="javascript:void(0)">
-          <b-form-group @submit.stop.prevent label="Documento" label-for="id">
+          <b-form-group @submit.stop.prevent label="Correo" label-for="email">
             <b-form-input
               class="form-control"
-              v-model="usuario.id"
-              type="number"
-              placeholder="Ingrese su documento de identidad"
-              id="id"
+              v-model="usuario.email"
+              type="email"
+              placeholder="Ingrese su correo electronico"
+              id="email"
             />
-            <b-form-invalid-feedback :state="validar_id"
+            <b-form-invalid-feedback :state="validar_email"
               >Campo obligatorio</b-form-invalid-feedback
             >
           </b-form-group>
@@ -56,33 +50,11 @@
             @click="mostrar_modal"
             block
             variant="outline-danger"
-            >Solicitar una Cuenta</b-button
+            >Crear una Cuenta</b-button
           >
 
-          <b-button
-            id="show-btn"
-            @click="mostrar_modal_clave"
-            block
-            variant="outline-danger"
-            >¿Olvidaste tu Contraseña?</b-button
-          >
-
-          <b-modal ref="my-modal" hide-footer title="Solicitar una Cuenta">
+          <b-modal ref="my-modal" hide-footer title="Crear una cuenta">
             <form ref="form" @submit.stop.prevent="solicitud">
-              <b-form-group
-                :state="estado_id"
-                label="Identificacón"
-                label-for="id_modal"
-                invalid-feedback="El documento es obligatorio"
-              >
-                <b-form-input
-                  id="id_modal"
-                  v-model="usuario.id"
-                  :state="estado_id"
-                  required
-                ></b-form-input>
-              </b-form-group>
-
               <b-form-group
                 :state="estado_correo"
                 label="Correo"
@@ -91,69 +63,51 @@
               >
                 <b-form-input
                   id="correo"
-                  v-model="usuario.correo"
+                  v-model="usuario.email"
+                  :state="estado_correo"
+                  required
+                ></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :state="estado_nombre"
+                label="Nombre de usuario"
+                label-for="nickname"
+                invalid-feedback="El nombre de usuario es obligatorio"
+              >
+                <b-form-input
+                  id="nickname"
+                  v-model="usuario.nickname"
                   :state="estado_correo"
                   required
                 ></b-form-input>
               </b-form-group>
 
               <b-form-group
-                label="¿Para qué quieres esta cuenta?"
-                label-for="description"
-              >
-                <b-form-textarea
-                  class="form-control"
-                  v-model="usuario.descripcion"
-                  placeholder="Ingrese una descripción"
-                  id="descripcion"
-                />
-              </b-form-group>
-
-              <p>
-                Se te enviará un correo electrónico cuando se cree la cuenta.
-              </p>
-            </form>
-            <b-button
-              class="mt-3"
-              variant="outline-danger"
-              block
-              @click="solicitar_cuenta()"
-              >Solicitar</b-button
-            >
-          </b-modal>
-
-          <b-modal ref="my-modal-pass" hide-footer title="Recuperar contraseña">
-            <form ref="form" @submit.stop.prevent="recuperar">
-              <b-form-group
-                :state="estado_clave"
-                label="Correo"
-                label-for="correo"
-                invalid-feedback="El correo es obligatorio"
+                :state="estado_nombre"
+                label="Contraseña"
+                label-for="password"
+                invalid-feedback="La contraseña es obligatoria"
               >
                 <b-form-input
-                  id="correo"
-                  v-model="usuario.correo"
+                  id="password"
+                  v-model="usuario.nickname"
                   :state="estado_clave"
                   required
                 ></b-form-input>
               </b-form-group>
 
-              <p>
-                Se te enviará un correo electrónico con una nueva contraseña.
-              </p>
+              <b-form-group label="File" laberl-for="file">
+                <b-form-file
+                  v-model="file"
+                  id="file"
+                  accept="image/jpeg, image/jpg, image/png, application/pdf"
+                  placeholder="Choose an image or PDF"
+                  drop-placeholder="Drop file here..."
+                ></b-form-file>
+              </b-form-group>
             </form>
-            <b-button
-              class="mt-3"
-              variant="outline-danger"
-              block
-              @click="recuperar_clave()"
-              >Recuperar</b-button
-            >
+           <b-button type="submit" variant="outline-danger">Crear cuenta</b-button>
           </b-modal>
-          <div class="text">
-            <br />
-            {{ mensaje2 }}
-          </div>
         </b-form>
         <br />
       </b-col>
@@ -161,12 +115,8 @@
   </div>
 </template>
 
-
-
-
 <script>
 import axios from "axios";
-
 
 export default {
   beforeMount() {
@@ -179,55 +129,49 @@ export default {
       estado_clave: null,
       url: "",
       message: "INICIAR SESIÓN",
-      mensaje2: "",
+      file : [],
       usuario: {
-        id: "",
+        email: "",
         clave: "",
-        correo: "",
-        descripcion: "",
-        primera_vez: "",
-      },
+        nickname: "",
+        range : 1
+      }
     };
   },
 
   computed: {
-    validar_id() {
-      return this.usuario.id.length > 0;
+    validar_email() {
+      return this.usuario.email.length > 0;
     },
 
     validar_clave() {
       return this.usuario.clave.length > 0;
-    },
+    }
   },
   methods: {
+    onSubmit(evt){
+      evt.preventDefault()
+
+    },
     carga_pagina() {
       let url = "http://localhost:8080/";
       this.url = url;
     },
     login() {
-      let url = "http://localhost:8080/" + "login";
+      let url = "http://localhost:8080/" + "users/" + this.usuario.email + "/" + this.usuario.clave;
 
-      if (this.usuario.id.length > 0 && this.usuario.clave.length > 0) {
+      if (this.usuario.email.length > 0 && this.usuario.clave.length > 0) {
         axios
-          .post(url, this.usuario)
-          .then((response) => {
+          .get(url)
+          .then(response => {
             let data = response.data;
             console.log("Data:", data);
-            localStorage.setItem("token", data.info);
-            localStorage.setItem("id", this.usuario.id);
-            console.log("Primera vez: ", data.primera_vez);
-            console.log("Rol: ", data.rol);
-            if(data.rol == 1) {
-              this.$router.push("/admin");
-              return;
-            }
-            if (!data.primera_vez) {
-              this.$router.push("/perfil");
-            } else {
-              this.$router.push("/home");
+            if(data.length == 1){
+              this.$router.push("/");
+              return
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.mensaje2 = error.response.data.message;
             console.log(error.response);
           });
@@ -257,33 +201,13 @@ export default {
       }
       axios
         .post(this.url + "emails/request", this.usuario)
-        .then((response) => {
+        .then(response => {
           console.log(response);
         })
-        .catch((error) => console.log(error));
+        .catch(error => console.log(error));
       this.ocultar_modal();
     },
 
-    recuperar_clave() {
-      if (!this.validar_pass()) {
-        return;
-      }
-      this.usuario.clave = this.generar_clave();
-      console.log(this.usuario);
-      axios
-        .put(this.url + "noPass/clave", this.usuario)
-        .then((response) => {
-          console.log(response);
-          axios
-            .post(this.url + "emails/recovery", this.usuario)
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => console.log(error));
-        })
-        .catch((error) => console.log(error));
-      this.ocultar_modal_clave();
-    },
     validar() {
       const valid = this.$refs.form.checkValidity();
       this.estado_id = valid;
@@ -311,8 +235,8 @@ export default {
         .toUpperCase();
       console.log(r);
       return r;
-    },
-  },
+    }
+  }
 };
 </script>
 

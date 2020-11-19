@@ -3,10 +3,10 @@ const db = require('../services/mongoDB')
 async function getUser (req,res)  {
     const connection = await db.getConnection()
     try{
-        var filter = {'email ' : req.email}
+        var filter = {"email" : req.params.email ,"password" : req.params.password}
         let dbo = connection.db('helping')
-        let cursor = dbo.collection('users').find(filter)
-        let values = cursor.toArray()
+        let cursor =  dbo.collection('users').find(filter)
+        let values = await cursor.toArray()
         console.log(values)
         res.status(200).send(values)
     }catch(e) {
