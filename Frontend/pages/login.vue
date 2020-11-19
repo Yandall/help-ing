@@ -63,7 +63,7 @@
               >
                 <b-form-input
                   id="correo"
-                  v-model="usuario.email"
+                  v-model="tempUser.email"
                   :state="estado_correo"
                   required
                 ></b-form-input>
@@ -76,21 +76,21 @@
               >
                 <b-form-input
                   id="nickname"
-                  v-model="usuario.nickname"
-                  :state="estado_correo"
+                  v-model="tempUser.nickname"
+                  :state="estado_nombre"
                   required
                 ></b-form-input>
               </b-form-group>
 
               <b-form-group
-                :state="estado_nombre"
+                :state="estado_clave"
                 label="Contraseña"
                 label-for="password"
                 invalid-feedback="La contraseña es obligatoria"
               >
                 <b-form-input
                   id="password"
-                  v-model="usuario.clave"
+                  v-model="tempUser.clave"
                   type = "password"
                   :state="estado_clave"
                   required
@@ -101,8 +101,8 @@
                 <b-form-file
                   v-model="file"
                   id="file"
-                  accept="image/jpeg, image/jpg, image/png, application/pdf"
-                  placeholder="Choose an image or PDF"
+                  accept="image/jpeg, image/jpg, image/png"
+                  placeholder="Choose an image"
                   drop-placeholder="Drop file here..."
                 ></b-form-file>
               </b-form-group>
@@ -125,7 +125,7 @@ export default {
   },
   data() {
     return {
-      estado_id: null,
+      estado_nombre: null,
       estado_correo: null,
       estado_clave: null,
       url: "",
@@ -133,10 +133,15 @@ export default {
       file : [],
       usuario: {
         email: "",
+        clave: ""
+      },
+      tempUser:{
+        email: "",
         clave: "",
         nickname: "",
         range : 1
       }
+
     };
   },
 
@@ -190,17 +195,23 @@ export default {
       try {
         var formData = new FormData()
         formData.append('file',file)
-        formData.append('nickname', this.usuario.nickname)
-        formData.append('email',this.usuario.email)
-        formData.append('password',this.usuario.clave)
-        formData.append('range', this.usuario.range)
+        formData.append('nickname', this.tempUser.nickname)
+        formData.append('email',this.tempUser.email)
+        formData.append('password',this.tempUser.clave)
+        formData.append('range', this.tempUser.range)
         const url = "http://localhost:8080/users/saveUser"
         const res = await Axios.post(url,formData)
         alert(res.data)
+        this.clearInputs()
       }catch(e){
         console.error(e)
       }
 
+    },clearInputs(){
+      this.tempUser.nickname = ""
+      this.tempUser.clave = ""
+      this.tempUser.email = ""
+      this.file = ""
     },
 
     mostrar_modal() {
