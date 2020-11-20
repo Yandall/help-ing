@@ -11,16 +11,21 @@
         >
         <b-button
           v-b-modal.modal-1
-          variant="success" 
+          variant="success"
           style="margin: 30px 0 15px 0"
           >Mostrar perfil</b-button
         >
 
-        <b-modal id="modal-1" title="Perfil">
-          <img :src="image" height="100" width="100" style = "margin: 10px">
-          <p class="my-4">Nombre de usuario: {{ nickname }} </p>
-          <p class="my-4">Correo electronico: {{email}}</p>
-          
+        <b-modal id="modal-1" title="Perfil" hide-footer="true">
+          <img :src="image" height="100" width="100" style="margin: 10px" />
+          <b-button
+            variant="danger"
+            @click="logOut()"
+            style="margin: 30px 0 15px 0"
+            >logOut</b-button
+          >
+          <p class="my-4">Nombre de usuario: {{ nickname }}</p>
+          <p class="my-4">Correo electronico: {{ email }}</p>
         </b-modal>
       </h1>
 
@@ -69,15 +74,15 @@ import config from "../assets/config";
 export default {
   beforeMount() {
     this.loadPosts(new URLSearchParams(location.search).get("page"));
-    this.cargarPerfil()
+    this.cargarPerfil();
   },
   data() {
     return {
       post_list: null,
       url: `${config.url_api}/post`,
       nickname: "",
-      email:"",
-      image:"",
+      email: "",
+      image: "",
       fields: [
         {
           key: "title",
@@ -119,10 +124,16 @@ export default {
     linkGen(pageNum) {
       return pageNum === 1 ? "?" : `?page=${pageNum}`;
     },
-    cargarPerfil(){
-      this.nickname = localStorage.getItem("nickname")
-      this.email = localStorage.getItem("email")
-      this.image = localStorage.getItem("image")
+    logOut() {
+      this.$router.push("/login");
+      localStorage.setItem("nickname", "");
+      localStorage.setItem("email", "");
+      localStorage.setItem("image", "");
+    },
+    cargarPerfil() {
+      this.nickname = localStorage.getItem("nickname");
+      this.email = localStorage.getItem("email");
+      this.image = localStorage.getItem("image");
     }
   }
 };
