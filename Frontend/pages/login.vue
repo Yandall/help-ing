@@ -41,9 +41,7 @@
             >
           </b-form-group>
 
-          <b-button  @click="login()" block variant="danger"
-            >Ingresar</b-button
-          >
+          <b-button @click="login()" block variant="danger">Ingresar</b-button>
 
           <b-button
             id="show-btn"
@@ -91,7 +89,7 @@
                 <b-form-input
                   id="password"
                   v-model="tempUser.clave"
-                  type = "password"
+                  type="password"
                   :state="estado_clave"
                   required
                 ></b-form-input>
@@ -107,7 +105,9 @@
                 ></b-form-file>
               </b-form-group>
             </form>
-           <b-button @click="crearCuenta(file)" variant="outline-danger">Crear cuenta</b-button>
+            <b-button @click="crearCuenta(file)" variant="outline-danger"
+              >Crear cuenta</b-button
+            >
           </b-modal>
         </b-form>
         <br />
@@ -130,24 +130,23 @@ export default {
       estado_clave: null,
       url: "",
       message: "INICIAR SESIÓN",
-      file : [],
+      file: [],
       usuario: {
         email: "",
         clave: ""
       },
-      tempUser:{
+      tempUser: {
         email: "",
         clave: "",
         nickname: "",
-        range : 1
+        range: 1
       }
-
     };
   },
 
   computed: {
-    fileName(){
-      return this.file.name
+    fileName() {
+      return this.file.name;
     },
     validar_email() {
       return this.usuario.email.length > 0;
@@ -158,27 +157,44 @@ export default {
     }
   },
   methods: {
-    onSubmit(evt){
-      evt.preventDefault()
-      this.crearCuenta(this.file)
-
+    onSubmit(evt) {
+      evt.preventDefault();
+      this.crearCuenta(this.file);
     },
     carga_pagina() {
       let url = "http://localhost:8080/";
       this.url = url;
     },
     login() {
-      let url = "http://localhost:8080/" + "users/" + this.usuario.email + "/" + this.usuario.clave;
+      let url =
+        "http://localhost:8080/" +
+        "users/" +
+        this.usuario.email +
+        "/" +
+        this.usuario.clave;
 
       if (this.usuario.email.length > 0 && this.usuario.clave.length > 0) {
-        Axios
-          .get(url)
+        Axios.get(url)
           .then(response => {
             let data = response.data;
             console.log("Data:", data);
-            if(data.length == 1){
+            if (data.length == 1) {
+              localStorage.setItem("nickname", data[0].nickname);
+              localStorage.setItem("email", data[0].email);
+              if (data[0].image) {
+                localStorage.setItem("image", "users/" + data[0].image);
+                
+              } else {
+                localStorage.setItem(
+                  "image",
+                  "https://external-content.duckduckgo.com/iu/" +
+                    "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
+                    "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"
+                );
+              }
+
               this.$router.push("/");
-              return
+              return;
             }
           })
           .catch(error => {
@@ -189,29 +205,29 @@ export default {
         alert("LLene todos los campos correctamente");
       }
     },
-    async crearCuenta(file){
-      console.log("ENTRO")
-      console.log(file)
+    async crearCuenta(file) {
+      console.log("ENTRO");
+      console.log(file);
       try {
-        var formData = new FormData()
-        formData.append('file',file)
-        formData.append('nickname', this.tempUser.nickname)
-        formData.append('email',this.tempUser.email)
-        formData.append('password',this.tempUser.clave)
-        formData.append('range', this.tempUser.range)
-        const url = "http://localhost:8080/users/saveUser"
-        const res = await Axios.post(url,formData)
-        alert(res.data)
-        this.clearInputs()
-      }catch(e){
-        console.error(e)
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("nickname", this.tempUser.nickname);
+        formData.append("email", this.tempUser.email);
+        formData.append("password", this.tempUser.clave);
+        formData.append("range", this.tempUser.range);
+        const url = "http://localhost:8080/users/saveUser";
+        const res = await Axios.post(url, formData);
+        alert(res.data);
+        this.clearInputs();
+      } catch (e) {
+        console.error(e);
       }
-
-    },clearInputs(){
-      this.tempUser.nickname = ""
-      this.tempUser.clave = ""
-      this.tempUser.email = ""
-      this.file = ""
+    },
+    clearInputs() {
+      this.tempUser.nickname = "";
+      this.tempUser.clave = "";
+      this.tempUser.email = "";
+      this.file = "";
     },
 
     mostrar_modal() {
@@ -228,7 +244,6 @@ export default {
     ocultar_modal_clave() {
       this.$refs["my-modal-pass"].hide();
     },
-
 
     validar() {
       const valid = this.$refs.form.checkValidity();
