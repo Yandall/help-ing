@@ -44,7 +44,7 @@ async function saveUser(req, res) {
             image: req.file.originalname
         }
         await createUser(user)
-        res.status(200).send('Post creado')
+        res.status(200).send('Usuario creado')
     } catch(e) {
         res.status(500).send(e)
         console.error("Error al crear")

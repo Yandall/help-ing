@@ -183,7 +183,6 @@ export default {
               localStorage.setItem("email", data[0].email);
               if (data[0].image) {
                 localStorage.setItem("image", "users/" + data[0].image);
-                
               } else {
                 localStorage.setItem(
                   "image",
@@ -195,6 +194,8 @@ export default {
 
               this.$router.push("/home");
               return;
+            } else {
+              alert("Asegurese de que todos los campos esten correctos");
             }
           })
           .catch(error => {
@@ -206,11 +207,21 @@ export default {
       }
     },
     async crearCuenta(file) {
-      console.log("ENTRO");
       console.log(file);
       try {
         var formData = new FormData();
-        formData.append("file", file);
+        if (file) {
+          if (file.length == 0) {
+            alert("Se debe seleccionar una imagen");
+            return;
+          } else {
+            formData.append("file", file);
+          }
+        } else {
+          alert("Se debe seleccionar una imagen");
+          return;
+        }
+
         formData.append("nickname", this.tempUser.nickname);
         formData.append("email", this.tempUser.email);
         formData.append("password", this.tempUser.clave);
@@ -227,7 +238,7 @@ export default {
       this.tempUser.nickname = "";
       this.tempUser.clave = "";
       this.tempUser.email = "";
-      this.file = "";
+      this.file = [];
     },
 
     mostrar_modal() {
