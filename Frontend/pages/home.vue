@@ -1,33 +1,52 @@
 <template>
-  <div class="container">
-    <div>
-      <h1 class="title">
-        Helping
-        <br />
-        <b-button
-          variant="success"
-          :to="{ name: 'createPost' }"
-          style="margin: 30px 0 15px 0"
-          >Create!</b-button
-        >
-        <b-button
-          v-b-modal.modal-1
-          variant="success"
-          style="margin: 30px 0 15px 0"
-          >Mostrar perfil</b-button
-        >
-        <b-button
-          variant="success"
-          :to="{ name: 'universalContent' }"
-          style="margin: 30px 0 15px 0"
-          >Contenido Universal</b-button
-        >
-        <b-button
-          variant="success"
-          :to="{ name: 'createUC' }"
-          style="margin: 30px 0 15px 0"
-          >Crear Contenido Universal</b-button
-        >
+  <div>
+    <b-navbar toggleable="lg" type="dark" variant="danger">
+      <b-navbar-brand href="home">Helping</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-form>
+            <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
+            <b-button size="sm" class="my-2 my-sm-2" type="submit">Buscar</b-button>
+            <b-button
+              variant="light"
+              size="sm"
+              style="margin-inline: 5px"
+              :to="{ name: 'createPost' }"
+            >Crear</b-button>
+          </b-nav-form>
+
+          <b-nav-item-dropdown right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <em>Usuario</em>
+            </template>
+            <b-dropdown-item href="#" v-b-modal.modal-1>Profile</b-dropdown-item>
+            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <b-button
+      variant="success"
+      :to="{ name: 'universalContent' }"
+      style="margin: 30px 0 15px 0"
+    >Contenido Universal</b-button
+    >
+    <b-button
+      variant="success"
+      :to="{ name: 'createUC' }"
+      style="margin: 30px 0 15px 0"
+    >Crear Contenido Universal</b-button
+    >
+    <div class="container">
+      <h1 class="title" id="home.title">
+        Ultimas publicaciones
+
         <b-modal id="modal-1" title="Perfil" hide-footer="true">
           <img :src="image" height="100" width="100" style="margin: 10px" />
           <b-button
@@ -60,6 +79,7 @@
           >
             <b-card-text>
               {{ item.body }}
+              <br>Tags: <b-badge pill variant="secondary" v-for="tag in item.tags" style="margin-right: 5px">{{tag}}</b-badge>
             </b-card-text>
             <div></div>
           </b-card>
@@ -155,7 +175,9 @@ export default {
 .container {
   margin: 0 auto;
   min-height: 100vh;
+  max-width: 900px;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -174,4 +196,16 @@ export default {
 .card-post {
   margin: 15px 0 15px 0;
 }
+</style>
+
+<style>
+.card{
+  width: auto;
+}
+
+.card-img-top{
+  height: auto;
+  max-width: 700px;
+}
+
 </style>

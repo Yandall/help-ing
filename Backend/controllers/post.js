@@ -7,7 +7,7 @@ async function getPosts(req,res) {
         let pageNumber = req.params.page
         let nPerPage = 5
         let dbo = connection.db('helping')
-        let cursor = dbo.collection('posts').find({})
+        let cursor = dbo.collection('posts').find({}).sort({'post_date': -1})
             .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
             .limit(nPerPage)
         let values = await cursor.toArray()

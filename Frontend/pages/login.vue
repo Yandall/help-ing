@@ -162,6 +162,11 @@ export default {
       this.crearCuenta(this.file);
     },
     carga_pagina() {
+      if (localStorage.getItem("nickname") == ""){
+        this.$router.push("/login");
+      } else{
+        this.$router.push("/home");
+      }
       let url = "http://localhost:8080/";
       this.url = url;
     },
