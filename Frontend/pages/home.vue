@@ -6,12 +6,37 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-button
+            variant="light"
+            size="sm"
+            v-if="mod"
+            style="margin-inline: 5px"
+            :to="{ name: 'createUC' }"
+          >Crear Contenido Universal</b-button>
+          <b-button
+            variant="light"
+            size="sm"
+            style="margin-inline: 5px"
+            :to="{ name: 'universalContent' }"
+          >Contenido Universal</b-button>
+        </b-navbar-nav>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
-            <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-            <b-button size="sm" class="my-2 my-sm-2" type="submit">Buscar</b-button>
+            <b-form-checkbox
+              id="checkbox-tags"
+              v-model="typeSearch"
+              name="checkbox-tags"
+              value="tags"
+              unchecked-value="title"
+              style="margin-right: 10px; color: white;"
+            >
+            Tags
+            </b-form-checkbox>
+            <b-form-input size="sm" class="mr-sm-2" v-model="search" placeholder="Buscar" style="min-width: 300px"></b-form-input>
+            <b-button size="sm" class="my-2 my-sm-2" @click="searchPost">Buscar</b-button>
             <b-button
               variant="light"
               size="sm"
@@ -26,39 +51,27 @@
               <em>Usuario</em>
             </template>
             <b-dropdown-item href="#" v-b-modal.modal-1>Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            <b-dropdown-item href="#" @click="logOut">Salir</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <b-button
-      variant="success"
-      :to="{ name: 'universalContent' }"
-      style="margin: 30px 0 15px 0"
-    >Contenido Universal</b-button
-    >
-    <b-button
-      variant="success"
-      :to="{ name: 'createUC' }"
-      style="margin: 30px 0 15px 0"
-    >Crear Contenido Universal</b-button
-    >
+
+
     <div class="container">
-      <h1 class="title" id="home.title">
+      <h1 class="title" id="home.title" v-if="!isSearching">
         Ultimas publicaciones
+      </h1>
+      <h1 class="title" id="home.search" v-if="isSearching">
+        Búsqueda
+      </h1>
 
         <b-modal id="modal-1" title="Perfil" hide-footer="true">
           <img :src="image" height="100" width="100" style="margin: 10px" />
-          <b-button
-            variant="danger"
-            @click="logOut()"
-            style="margin: 30px 0 15px 0"
-            >logOut</b-button
-          >
           <p class="my-4">Nombre de usuario: {{ nickname }}</p>
           <p class="my-4">Correo electronico: {{ email }}</p>
         </b-modal>
-      </h1>
+
 
       <b-list-group>
         <b-list-group-item
@@ -88,6 +101,7 @@
 
       <div class="overflow-auto">
         <b-pagination-nav
+          v-if="!isSearching"
           :link-gen="linkGen"
           :number-of-pages="numberPages"
           use-router
@@ -127,10 +141,29 @@ export default {
         }
       ],
       numberPages: 3,
-      perPage: 5
+      perPage: 5,
+      typeSearch: 'title',
+      search: '',
+      mod: false,
+      isSearching: false
     };
   },
   methods: {
+    searchPost(){
+      this.isSearching = true
+      Axios.get(`${this.url}/${this.typeSearch}/${this.search}`)
+        .then(res => {
+          let data = res.data;
+          data.forEach(item => {
+            item.post_date = item.post_date.substring(0, 10);
+          });
+          console.log(data)
+          this.post_list = data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
     loadPosts(index) {
       index = index || 1;
       Axios.get(this.url + "/" + index, {
@@ -145,6 +178,7 @@ export default {
           data.forEach(item => {
             item.post_date = item.post_date.substring(0, 10);
           });
+          console.log(data)
           this.post_list = data;
           this.numberPages = Math.ceil(res.data.cantPosts / this.perPage);
           console.log(this.numberPages);
@@ -166,6 +200,11 @@ export default {
       this.nickname = localStorage.getItem("nickname");
       this.email = localStorage.getItem("email");
       this.image = localStorage.getItem("image");
+      if(localStorage.getItem("range") == 1){
+        this.mod = false
+      } else {
+        this.mod = true
+      }
     }
   }
 };

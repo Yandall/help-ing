@@ -112,7 +112,6 @@ import config from "../assets/config"
 
 <style scoped>
 .container {
-  margin: 0 auto;
   padding: 3em 5em 1em 5em;
   min-height: 50vh;
   display: block;

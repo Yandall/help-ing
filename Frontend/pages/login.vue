@@ -186,6 +186,7 @@ export default {
             if (data.length == 1) {
               localStorage.setItem("nickname", data[0].nickname);
               localStorage.setItem("email", data[0].email);
+              localStorage.setItem("range", data[0].range)
               if (data[0].image) {
                 localStorage.setItem("image", "users/" + data[0].image);
               } else {
