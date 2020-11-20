@@ -30,7 +30,7 @@ async function searchPost(req,res) {
         let input = req.params.input
         let filter = {[type]: new RegExp(input)}
         let dbo = connection.db('helping')
-        let cursor = dbo.collection('posts').find(filter)
+        let cursor = dbo.collection('posts').find(filter).sort({'post_date': -1})
         let values = await cursor.toArray()
         console.log(values)
         console.log('filter:', filter)
