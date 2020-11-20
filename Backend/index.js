@@ -11,8 +11,12 @@ app.use(cors())
 
 const posts = require('./routes/post')
 const users = require('./routes/users')
+const uc = require(('./routes/universalContent'))
+const types = require('./routes/types')
 app.use('/post', posts)
 app.use('/users', users)
+app.use('/uc', uc)
+app.use('/users', types)
 
 const port = process.env.PORT
 app.listen(port, () => {
