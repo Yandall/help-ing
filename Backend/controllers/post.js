@@ -6,16 +6,35 @@ async function getPosts(req,res) {
     try {
         let pageNumber = req.params.page
         let nPerPage = 5
-        let filter = ''
-        filter = filter === '' ? ({}) : filter
         let dbo = connection.db('helping')
-        let cursor = dbo.collection('posts').find(filter)
+        let cursor = dbo.collection('posts').find({})
             .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
             .limit(nPerPage)
         let values = await cursor.toArray()
         let cantPosts = await dbo.collection('posts').countDocuments({})
 
         res.status(200).send({values, cantPosts})
+    } catch (e) {
+        res.status(500).send('Hubo un error')
+        console.log(e)
+    } finally {
+        if (connection.isConnected())
+            await connection.close()
+    }
+}
+
+async function searchPost(req,res) {
+    const connection = await db.getConnection()
+    try {
+        let type = req.params.type
+        let input = req.params.input
+        let filter = {[type]: new RegExp(input)}
+        let dbo = connection.db('helping')
+        let cursor = dbo.collection('posts').find(filter)
+        let values = await cursor.toArray()
+        console.log(values)
+        console.log('filter:', filter)
+        res.status(200).send(values)
     } catch (e) {
         res.status(500).send('Hubo un error')
         console.log(e)
@@ -61,5 +80,5 @@ async function saveFile(req, res) {
 }
 
 module.exports = {
-    getPosts, saveFile
+    getPosts, searchPost, saveFile
 }
