@@ -16,7 +16,7 @@ const types = require('./routes/types')
 app.use('/post', posts)
 app.use('/users', users)
 app.use('/uc', uc)
-app.use('/users', types)
+app.use('/types', types)
 
 const port = process.env.PORT
 app.listen(port, () => {

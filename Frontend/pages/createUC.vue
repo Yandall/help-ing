@@ -109,7 +109,7 @@ export default {
 
         loadTpyes(){
 
-            axios.get(config.url_api + "/type")
+            axios.get(config.url_api + "/types")
             .then(res => {
                 let data = res.data;
                 for(let i in data){
@@ -136,7 +136,7 @@ export default {
                 formData.append("type", this.uc.type);
                 formData.append("icon", this.uc.icon);
                 const url = "http://localhost:8080/universalContents/saveUC";
-                const res = await Axios.post(url, formData);
+                const res = await axios.post(url, formData);
                 alert(res.data);
                 this.clearInputs();
             } catch (e) {
