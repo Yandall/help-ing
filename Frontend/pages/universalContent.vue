@@ -1,35 +1,20 @@
 <template>
   <div class="container">
     
-     <h1 class="title" id="home.title">
-       Contenido Universal</h1>
-      <b-list-group>
-        <b-list-group-item
-          :key="item._id"
-          v-for="item in universalContents"
-          class="card-post"
-          style="border: none"
-        >
-         <b-card
-            :title="item.title"
-            :img-src="item.icon"
-            img-alt=""
-            img-top
-            style="max-width: 45rem;"
-            class="mb-2"
-            
-            :footer="item.url">
-              <b-card-text>
-               Autor: {{item.author}}
-               <br>
-               Tipo: {{item.type}}
-             
-              <br>
-            </b-card-text>
-            <div></div>
-          </b-card>
-        </b-list-group-item>
-      </b-list-group>
+    <b-card title="Lista de Contenidos">
+      <b-table
+        stacked
+        responsive
+        :items="universalContents"
+        
+      >
+        <template  v-slot:cell(icon)="data">
+          
+          <b-img :src="data.item.icon" width="100px" height="100px"></b-img>
+         
+        </template>
+      </b-table>
+    </b-card>
   </div>
 </template>
 
@@ -96,41 +81,6 @@ export default {
 </script>
 
 
-<style scoped>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  max-width: 900px;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.card-post {
-  margin: 15px 0 15px 0;
-}
-</style>
 
 <style>
-.card{
-  width: auto;
-}
-
-.card-img-top{
-  height: auto;
-  max-width: 700px;
-}
-
 </style>
