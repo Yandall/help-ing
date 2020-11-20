@@ -3,6 +3,7 @@
     <div>
       <h1 class="title">
         Helping
+        <br />
         <b-button
           variant="success"
           :to="{ name: 'createPost' }"
@@ -15,7 +16,18 @@
           style="margin: 30px 0 15px 0"
           >Mostrar perfil</b-button
         >
-
+        <b-button
+          variant="success"
+          :to="{ name: 'universalContent' }"
+          style="margin: 30px 0 15px 0"
+          >Contenido Universal</b-button
+        >
+        <b-button
+          variant="success"
+          :to="{ name: 'createUC' }"
+          style="margin: 30px 0 15px 0"
+          >Crear Contenido Universal</b-button
+        >
         <b-modal id="modal-1" title="Perfil" hide-footer="true">
           <img :src="image" height="100" width="100" style="margin: 10px" />
           <b-button
