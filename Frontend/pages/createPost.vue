@@ -60,7 +60,7 @@ import config from "../assets/config"
         file: [],
         form: {
           body: '',
-          author: 'Yandall',
+          author: '',
           post_date: date
         },
         show: true
@@ -85,7 +85,7 @@ import config from "../assets/config"
           formData.append('title', this.form.title)
           formData.append('body', this.form.body)
           formData.append('tags', this.form.tags)
-          formData.append('author', this.form.author)
+          formData.append('author', localStorage.getItem('nickname'))
           formData.append('post_date', this.form.post_date)
           const url = `${config.url_api}/post/saveFile`
           const res = await Axios.post(url, formData)
@@ -100,12 +100,17 @@ import config from "../assets/config"
         this.form.body = ''
         this.form.tags = ''
         this.form.file = ''
+      },
+      cargarPerfil() {
+        this.nickname = localStorage.getItem("nickname")
+        this.email = localStorage.getItem("email")
+        this.image = localStorage.getItem("image")
       }
     }
   }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 0 auto;
   padding: 3em 5em 1em 5em;
