@@ -8,9 +8,12 @@
 
 <script>
 export default {
-  beforeMount(){
-    this.$router.push("/login");
+  beforeMount() {
+    if (localStorage.getItem("nickname") == ""){
+        this.$router.push("/login");
+    } else{
+      this.$router.push("/home");
+    }
   }
-   
-}
+};
 </script>
