@@ -37,7 +37,7 @@ async function saveUC(req, res) {
       title: req.body.title,
       author: req.body.author,
       url: req.body.url,
-      file: req.body.file,
+      file: req.file.originalname,
       type: req.body.type,
       icon: req.body.icon,
     };

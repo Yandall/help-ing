@@ -34,13 +34,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <!--     <b-form-file
-            
-            v-model="uc.file"
-            :state="Boolean(uc.file)"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..."
-          ></b-form-file>  -->
+       
 
         <b-form-group label="Tipo:" label-for="tipos">
           <b-form-radio-group
@@ -54,12 +48,14 @@
           ></b-form-radio-group>
         </b-form-group>
 
-        <b-form-group label="Icono:" label-for="icon">
-          <b-form-input
-            id="icon"
-            v-model="uc.icon"
-            placeholder="Ingrese la url del icono"
-          ></b-form-input>
+       <b-form-group label="File" laberl-for="file">
+          <b-form-file
+            v-model="uc.file"
+            id="file"
+            accept="image/jpeg, image/jpg, image/png, application/pdf"
+            placeholder="Choose an image or PDF"
+            drop-placeholder="Drop file here..."
+          ></b-form-file>
         </b-form-group>
 
         <b-button type="submit" variant="primary">Submit</b-button>
@@ -128,17 +124,16 @@ export default {
        async createUC() {
              try {
                 var formData = new FormData();
-                if(this.uc.icon = "")  this.uc.icon = "https://image.flaticon.com/icons/png/512/4/4327.png"
                 formData.append("title", this.uc.title);
                 formData.append("author", this.uc.author);
                 formData.append("url", this.uc.url);
                 formData.append("file", this.uc.file);
                 formData.append("type", this.uc.type);
                 formData.append("icon", this.uc.icon);
-                const url = "http://localhost:8080/universalContents/saveUC";
+                const url = "http://localhost:8080/uc/saveUC";
                 const res = await axios.post(url, formData);
                 alert(res.data);
-                this.clearInputs();
+              
             } catch (e) {
                 console.error(e);
             }
