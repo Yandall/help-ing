@@ -7,14 +7,17 @@ especificamente para los estudiantes de la facultad de ingenieria, su instalaci√
 # instalar dependencias
 $ cd backend
 $ npm i 
+```
 
 ## Para el frontend
 
+```bash
 # instalar dependencias
 $ cd frontend
 $ npm i
 ```
-Ahora para correr el proyecto:
+
+## Para correr el proyecto:
 
 ```bash
 ## Para el backend
