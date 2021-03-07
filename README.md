@@ -4,20 +4,22 @@ especificamente para los estudiantes de la facultad de ingenieria, su instalaciÃ
 
 ## Para el backend
 
-# cd backend
-# npm i 
+#instalar dependencias
+$ cd backend
+$ npm i 
 
 ## Para el frontend
 
-# cd frontend
-# npm i
+#instalar dependencias
+$ cd frontend
+$ npm i
 
 Ahora para correr el proyecto:
 
 ## Para el backend
 
-# node index.js
+$ node index.js
 
 ## Para el frontend
 
-# npm run dev
+$ npm run dev
