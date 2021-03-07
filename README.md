@@ -4,13 +4,13 @@ especificamente para los estudiantes de la facultad de ingenieria, su instalaciÃ
 
 ## Para el backend
 
-#instalar dependencias
+# instalar dependencias
 $ cd backend
 $ npm i 
 
 ## Para el frontend
 
-#instalar dependencias
+# instalar dependencias
 $ cd frontend
 $ npm i
 
