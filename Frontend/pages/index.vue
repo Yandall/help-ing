@@ -9,6 +9,7 @@
 <script>
 export default {
   beforeMount() {
+
     if (localStorage.getItem("nickname") == ""){
         this.$router.push("/login");
     } else{

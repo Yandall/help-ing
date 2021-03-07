@@ -1,77 +1,60 @@
-.container {
-    margin-top: 30px;
+.card {
     background-color: white;
     border-radius: 30px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     justify-content: center;
-    align-items: center;
     align-content: stretch;
     -webkit-box-shadow: -7px 7px 26px 0px rgba(150,150,150,1);
     -moz-box-shadow: -7px 7px 26px 0px rgba(150,150,150,1);
     box-shadow: -7px 7px 26px 0px rgba(150,150,150,1);
+    width:550px;
+    height:650px;
+    font-size:30px;
   }
-  
-  
-  .container_login {
-    margin-top: 30px;
-    background-color: white;
-    border-radius: 30px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    align-content: stretch;
-  }
-    .tittle {
-      font-family: "Oswald", sans-serif;
-      margin: 20px;
-      font-size: 30px;
-      font-weight: bold;
-      color: #ED0034;
-    }
-    hi {
-      color: white;
-    }
-    body {
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-    .iconEdit  {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      align-content: stretch;
-  }
-  .center {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      align-items: center;
-      align-content: stretch;
-  }
-  
-  .icon {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      align-items: flex-start;
-      align-content: stretch;
-  }
-  
-  .text {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-      align-content: stretch;
-      color: #ED0034;
-  }
-  
+
+.container_login {
+  margin-top: 30px;
+  background-color: white;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+}
+
+.tittle {
+  font-family: "Oswald", sans-serif;
+  margin: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #ED0034;
+}
+
+hi {
+  color: white;
+}
+body {
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.img{
+  height:450px;
+}
+
+
+.col{
+  margin-top: 50px;
+  padding-right: 50px;
+  height: 700px;
+}
+
+.card-title{
+  font-family: "Oswald", sans-serif;
+  margin: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #ED0034;
+}

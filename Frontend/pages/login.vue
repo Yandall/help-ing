@@ -1,126 +1,148 @@
 <template>
+
   <div class="body">
-    <b-container>
-      <b-col>
-        <!-- Content here -->
 
-        <div class="container_login">
-          <div class="tittle">{{ message }}</div>
-        </div>
+    <b-container >
+      <b-row>
+        <b-col align-self="center">
+          <div class="container_login">
+            <div class="tittle">HELP ING</div>
+          </div>
 
-        <br />
+          <b-img src="../ingedraw.jpg" height="450px"></b-img>
+        </b-col>
+        <b-col align-self="center">
+          <b-form action="javascript:void(0)">
+            <b-card-group>
+              <b-card >
 
-        <b-form action="javascript:void(0)">
-          <b-form-group @submit.stop.prevent label="Correo" label-for="email">
-            <b-form-input
-              class="form-control"
-              v-model="usuario.email"
-              type="email"
-              placeholder="Ingrese su correo electronico"
-              id="email"
-            />
-            <b-form-invalid-feedback :state="validar_email"
-              >Campo obligatorio</b-form-invalid-feedback
-            >
-          </b-form-group>
+                <div class="container_login">
+                  <div class="tittle">{{ message }}</div>
+                </div>
 
-          <b-form-group
-            @submit.stop.prevent
-            label="Contraseña"
-            label-for="password"
-          >
-            <b-form-input
-              class="form-control"
-              type="password"
-              v-model="usuario.clave"
-              placeholder="Ingrese su contraseña"
-              id="password"
-            />
-            <b-form-invalid-feedback :state="validar_clave"
-              >Campo obligatorio</b-form-invalid-feedback
-            >
-          </b-form-group>
+                <br />
 
-          <b-button @click="login()" block variant="danger">Ingresar</b-button>
+                <b-form-group @submit.stop.prevent >
+                  <b-form-invalid-feedback :state="validar_email">*</b-form-invalid-feedback>
+                  <b-form-input
+                    class="form-control"
+                    v-model="usuario.email"
+                    type="email"
+                    placeholder="Ingrese su correo electronico"
+                    id="email"
+                    size="lg"/>
 
-          <b-button
-            id="show-btn"
-            @click="mostrar_modal"
-            block
-            variant="outline-danger"
-            >Crear una Cuenta</b-button
-          >
+                </b-form-group>
 
-          <b-modal ref="my-modal" hide-footer title="Crear una cuenta">
-            <form ref="form" @submit.stop.prevent="solicitud">
-              <b-form-group
-                :state="estado_correo"
-                label="Correo"
-                label-for="correo"
-                invalid-feedback="El correo es obligatorio"
-              >
-                <b-form-input
-                  id="correo"
-                  v-model="tempUser.email"
+                <b-form-group @submit.stop.prevent >
+                  <b-form-invalid-feedback :state="validar_clave">*</b-form-invalid-feedback>
+                  <b-form-input
+                    class="form-control"
+                    type="password"
+                    v-model="usuario.clave"
+                    placeholder="Ingrese su contraseña"
+                    id="password"
+                    size="lg"/>
+
+                </b-form-group>
+
+                <br>
+
+
+                <b-button @click="login()" block v
+                          ariant="danger">Ingresar</b-button>
+
+                <br>
+
+                <b-button
+                    id="show-btn"
+                    @click="mostrar_modal"
+                    block
+                    variant="outline-danger">Crear una Cuenta</b-button>
+                </b-card>
+
+            </b-card-group>
+            <b-modal ref="my-modal" hide-footer title="Crear una cuenta">
+              <form ref="form" @submit.stop.prevent="solicitud">
+                <b-form-group
                   :state="estado_correo"
-                  required
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group
-                :state="estado_nombre"
-                label="Nombre de usuario"
-                label-for="nickname"
-                invalid-feedback="El nombre de usuario es obligatorio"
-              >
-                <b-form-input
-                  id="nickname"
-                  v-model="tempUser.nickname"
+                  label="Correo"
+                  label-for="correo"
+                  invalid-feedback="El correo es obligatorio"
+                >
+                  <b-form-input
+                    id="correo"
+                    v-model="tempUser.email"
+                    :state="estado_correo"
+                    required
+                    size="lg"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
                   :state="estado_nombre"
-                  required
-                ></b-form-input>
-              </b-form-group>
+                  label="Nombre de usuario"
+                  label-for="nickname"
+                  invalid-feedback="El nombre de usuario es obligatorio"
+                >
+                  <b-form-input
+                    id="nickname"
+                    v-model="tempUser.nickname"
+                    :state="estado_nombre"
+                    required
 
-              <b-form-group
-                :state="estado_clave"
-                label="Contraseña"
-                label-for="password"
-                invalid-feedback="La contraseña es obligatoria"
-              >
-                <b-form-input
-                  id="password"
-                  v-model="tempUser.clave"
-                  type="password"
+                  ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
                   :state="estado_clave"
-                  required
-                ></b-form-input>
-              </b-form-group>
+                  label="Contraseña"
+                  label-for="password"
+                  invalid-feedback="La contraseña es obligatoria"
+                >
+                  <b-form-input
+                    id="password"
+                    v-model="tempUser.clave"
+                    type="password"
+                    :state="estado_clave"
+                    required
 
-              <b-form-group label="File" laberl-for="file">
-                <b-form-file
-                  v-model="file"
-                  id="file"
-                  accept="image/jpeg, image/jpg, image/png"
-                  placeholder="Choose an image"
-                  drop-placeholder="Drop file here..."
-                ></b-form-file>
-              </b-form-group>
-            </form>
-            <b-button @click="crearCuenta(file)" variant="outline-danger"
+                  ></b-form-input>
+                </b-form-group>
+
+                <b-form-group label="File" laberl-for="file">
+                  <b-form-file
+                    v-model="file"
+                    id="file"
+                    accept="image/jpeg, image/jpg, image/png"
+                    placeholder="Choose an image"
+                    drop-placeholder="Drop file here..."
+                  ></b-form-file>
+                </b-form-group>
+              </form>
+              <b-button @click="crearCuenta(file)" variant="outline-danger"
               >Crear cuenta</b-button
-            >
-          </b-modal>
-        </b-form>
-        <br />
-      </b-col>
+              >
+            </b-modal>
+          </b-form>
+
+
+          <br />
+        </b-col>
+
+      </b-row>
     </b-container>
+
   </div>
+
 </template>
 
 <script>
 import Axios from "axios";
-
+import { BootstrapVueIcons } from 'bootstrap-vue';
+import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 export default {
   beforeMount() {
+
     this.carga_pagina();
   },
   data() {
@@ -147,8 +169,7 @@ export default {
   computed: {
     fileName() {
       return this.file.name;
-    },
-    validar_email() {
+    },validar_email() {
       return this.usuario.email.length > 0;
     },
 
@@ -161,6 +182,7 @@ export default {
       evt.preventDefault();
       this.crearCuenta(this.file);
     },
+
     carga_pagina() {
       if (localStorage.getItem("nickname") == ""){
         this.$router.push("/login");

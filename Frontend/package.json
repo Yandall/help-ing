@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.7"
-  }
+  },
+  "description": "```bash\r # install dependencies\r $ npm install",
+  "main": "nuxt.config.js",
+  "license": "ISC"
 }
