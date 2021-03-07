@@ -38,7 +38,7 @@ async function saveUser(req, res) {
     try {
         let user = {
             nickname: req.body.nickname,
-            password: req.body.password,
+            password: md5(req.body.password),
             email: req.body.email,
             range: parseInt(req.body.range),
             image: req.file.originalname
@@ -53,5 +53,5 @@ async function saveUser(req, res) {
 }
 
 module.exports = {
-    getUser, createUser, saveUser
+    getUser, saveUser, createUser
 }

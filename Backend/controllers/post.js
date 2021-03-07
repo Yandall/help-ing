@@ -20,6 +20,7 @@ async function getPosts(req,res) {
     } finally {
         if (connection.isConnected())
             await connection.close()
+
     }
 }
 
