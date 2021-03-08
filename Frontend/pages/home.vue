@@ -1,12 +1,18 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="danger">
+    <b-navbar toggleable="lg" type="dark">
       <b-navbar-brand href="home">Helping</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
+          <b-button
+            variant="light"
+            size="sm"
+            style="margin-inline: 5px"
+            :to="{ name: 'createPost' }"
+          >Crear Publicación</b-button>
           <b-button
             variant="light"
             size="sm"
@@ -36,13 +42,8 @@
             Tags
             </b-form-checkbox>
             <b-form-input size="sm" class="mr-sm-2" v-model="search" placeholder="Buscar" style="min-width: 300px"></b-form-input>
-            <b-button size="sm" class="my-2 my-sm-2" @click="searchPost">Buscar</b-button>
-            <b-button
-              variant="light"
-              size="sm"
-              style="margin-inline: 5px"
-              :to="{ name: 'createPost' }"
-            >Crear</b-button>
+            <b-button size="sm"  class="btnBuscar" @click="searchPost">Buscar</b-button>
+
           </b-nav-form>
 
           <b-nav-item-dropdown right>
@@ -50,7 +51,7 @@
             <template #button-content>
               <em>Usuario</em>
             </template>
-            <b-dropdown-item href="#" v-b-modal.modal-1>Profile</b-dropdown-item>
+            <b-dropdown-item href="#" v-b-modal.modal-1>Perfil</b-dropdown-item>
             <b-dropdown-item href="#" @click="logOut">Salir</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -235,16 +236,13 @@ export default {
 .card-post {
   margin: 15px 0 15px 0;
 }
+
+.navbar {
+  background-color: #A00001;
+}
 </style>
 
-<style>
-.card{
-  width: auto;
-}
+<style src="../css/home.css" />
 
-.card-img-top{
-  height: auto;
-  max-width: 700px;
-}
 
-</style>
+
