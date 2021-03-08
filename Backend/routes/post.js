@@ -18,7 +18,7 @@ var upload = multer({ storage: storage,
         if (isPhoto || isPdf) {
             next(null, true);
         } else {
-            next({message: "Formato no valido solo puedes adjuntar imagenes"}, false);
+            next({message: "Formato no valido solo puedes adjuntar imagenes o pdf"}, false);
         }
     } })
 

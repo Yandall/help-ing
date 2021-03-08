@@ -12,7 +12,15 @@ var storage = multer.diskStorage({
 
 })
 
-var upload = multer({ storage: storage })
+var upload = multer({ storage: storage,
+  fileFilter(req, file, next) {
+      const isPhoto = file.mimetype.startsWith('image/');
+      if (isPhoto) {
+          next(null, true);
+      } else {
+          next({message: "Formato no valido solo puedes adjuntar imagenes"}, false);
+      }
+  } })
 
 router.post('/saveUser', upload.single('file'), user_controller.saveUser)
 
