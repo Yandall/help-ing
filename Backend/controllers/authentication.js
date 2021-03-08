@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken")
 const db = require('../services/mongoDB')
 const SECRET_KEY = process.env.SECRET_KEY
+const md5  = require("md5")
 
 let validate_data = (user) => {
     if (!user) {
@@ -29,7 +30,7 @@ async function getUser(req, res) {
     const connection = await db.getConnection()
 
     try {
-        var filter = {"email": req.email, "password": req.password}
+        var filter = {"email": req.email, "password": md5(req.password)}
         let dbo = connection.db('helping')
         let cursor = dbo.collection('users').find(filter)
         let values = await cursor.toArray()
@@ -63,9 +64,14 @@ let validate_user = (req, res) => {
         validate_data(body)
         getUser(body).then((answer) => {
             if (answer) {
+                let token = generate_token(body)
                 res.status(200).send({
                     ok: true,
-                    message: "Persona autenticada"
+                    message: "Persona autenticada",
+                    nickname: answer.nickname,
+                    email: answer.email,
+                    range: answer.range
+
                 });
             } else {
                 res.status(400).send({
@@ -84,7 +90,6 @@ let validate_user = (req, res) => {
 }
 
 let verify_authentication = (req, res) => {
-
     try {
         let token = req.headers.token;
         validate_token(token);

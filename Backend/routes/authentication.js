@@ -7,7 +7,8 @@ const _controller = require("../controllers/authentication")
 router.use((req, res, next) => {
     try {
         let url = req.url
-        if (url === "/login") {
+        console.log(url)
+        if (url === "/") {
             next();
         } else {
             let token = req.headers.token;

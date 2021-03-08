@@ -194,23 +194,22 @@ export default {
     },
     login() {
       let url =
-        "http://localhost:8080/" +
-        "users/" +
-        this.usuario.email +
-        "/" +
-        this.usuario.clave;
+        "http://localhost:8080/login"
 
       if (this.usuario.email.length > 0 && this.usuario.clave.length > 0) {
-        Axios.get(url)
+        this.usuario.password = this.usuario.clave
+        Axios.post(url, this.usuario)
           .then(response => {
+            let user = this.user
+            console.log("User", user)
             let data = response.data;
             console.log("Data:", data);
-            if (data.length == 1) {
-              localStorage.setItem("nickname", data[0].nickname);
-              localStorage.setItem("email", data[0].email);
-              localStorage.setItem("range", data[0].range)
-              if (data[0].image) {
-                localStorage.setItem("image", "users/" + data[0].image);
+            if (data.ok) {
+              localStorage.setItem("nickname", data.nickname);
+              localStorage.setItem("email", data.email);
+              localStorage.setItem("range", data.range)
+              if (data.image) {
+                localStorage.setItem("image", "users/" + data.image);
               } else {
                 localStorage.setItem(
                   "image",
