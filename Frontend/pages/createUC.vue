@@ -34,7 +34,7 @@
           ></b-form-input>
         </b-form-group>
 
-       
+
 
         <b-form-group label="Tipo:" label-for="tipos">
           <b-form-radio-group
@@ -133,7 +133,7 @@ export default {
                 const url = "http://localhost:8080/uc/saveUC";
                 const res = await axios.post(url, formData);
                 alert(res.data);
-              
+
             } catch (e) {
                 console.error(e);
             }
@@ -144,3 +144,5 @@ export default {
     }
 };
 </script>
+
+
