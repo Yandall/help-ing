@@ -198,13 +198,18 @@ export default {
       localStorage.setItem("range", "")
     },
     cargarPerfil() {
-      this.nickname = localStorage.getItem("nickname");
-      this.email = localStorage.getItem("email");
-      this.image = localStorage.getItem("image");
-      if(localStorage.getItem("range") == 1){
-        this.mod = false
+      if (localStorage.getItem("nickname") == "" || localStorage.getItem("email") == "") {
+        this.$router.push("/login")
+
       } else {
-        this.mod = true
+        this.nickname = localStorage.getItem("nickname");
+        this.email = localStorage.getItem("email");
+        this.image = localStorage.getItem("image");
+        if (localStorage.getItem("range") == 1) {
+          this.mod = false
+        } else {
+          this.mod = true
+        }
       }
     }
   }
