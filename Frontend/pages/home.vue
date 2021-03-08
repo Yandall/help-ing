@@ -67,7 +67,7 @@
         Búsqueda
       </h1>
 
-        <b-modal id="modal-1" title="Perfil" hide-footer="true">
+        <b-modal id="modal-1" title="Perfil" :hide-footer="true">
           <img :src="image" height="100" width="100" style="margin: 10px" />
           <p class="my-4">Nombre de usuario: {{ nickname }}</p>
           <p class="my-4">Correo electronico: {{ email }}</p>
@@ -90,12 +90,13 @@
             style="max-width: 60rem;"
             class="mb-2"
             :footer="item.author + ' ' + item.post_date"
+
           >
             <b-card-text>
               {{ item.body }}
               <br>Tags: <b-badge pill variant="secondary" v-for="tag in item.tags" style="margin-right: 5px">{{tag}}</b-badge>
             </b-card-text>
-            <div></div>
+
           </b-card>
         </b-list-group-item>
       </b-list-group>
@@ -122,6 +123,7 @@ export default {
   beforeMount() {
     this.loadPosts(new URLSearchParams(location.search).get("page"));
     this.cargarPerfil();
+
   },
   data() {
     return {

@@ -14,7 +14,7 @@
         <b-col align-self="center">
           <b-form action="javascript:void(0)">
             <b-card-group>
-              <b-card >
+              <b-card class="card-login" >
 
                 <div class="container_login">
                   <div class="tittle">{{ message }}</div>
