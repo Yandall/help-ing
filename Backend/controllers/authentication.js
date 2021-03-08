@@ -30,7 +30,7 @@ async function getUser(req, res) {
     const connection = await db.getConnection()
 
     try {
-        var filter = {"email": req.email, "password": md5(req.password)}
+        var filter = {"email": req.email, "password": req.password}
         let dbo = connection.db('helping')
         let cursor = dbo.collection('users').find(filter)
         let values = await cursor.toArray()
