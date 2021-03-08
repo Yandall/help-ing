@@ -62,13 +62,14 @@ async function createPost(data= {}) {
 
 async function saveFile(req, res) {
     try {
+        let fileName = (req.file) ? req.file.originalname : ""
         let post = {
             title: req.body.title,
             body: req.body.body,
             tags: req.body.tags.split(','),
             author: req.body.author,
             post_date: req.body.post_date,
-            file: req.file.originalname
+            file: fileName
         }
         console.log(post.post_date)
         await createPost(post)
