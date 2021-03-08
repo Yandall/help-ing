@@ -1,23 +1,6 @@
 const db = require('../services/mongoDB')
+const md5 = require("md5")
 
-async function getUser (req,res)  {
-    const connection = await db.getConnection()
-    try{
-        var filter = {"email" : req.params.email ,"password" : req.params.password}
-        let dbo = connection.db('helping')
-        let cursor =  dbo.collection('users').find(filter)
-        let values = await cursor.toArray()
-        console.log(values)
-        res.status(200).send(values)
-    }catch(e) {
-        res.status(500).send('Hubo un error')
-        console.log(e)
-    }finally{
-        if(connection.isConnected()){
-            await connection.close()
-        }
-    }
-}
 
 async function createUser(data) {
     const connection = await db.getConnection()
@@ -48,10 +31,11 @@ async function saveUser(req, res) {
     } catch(e) {
         res.status(500).send(e)
         console.error("Error al crear")
+        console.log(e)
     }
 
 }
 
 module.exports = {
-    getUser, saveUser, createUser
+    saveUser, createUser
 }
