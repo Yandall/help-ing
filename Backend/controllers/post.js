@@ -62,7 +62,7 @@ async function createPost(data= {}) {
 
 async function saveFile(req, res) {
     try {
-        let fileName = (req.file) ? req.file.originalname : ""
+        let fileName = (req.file) ? req.file.originalname : ''
         let post = {
             title: req.body.title,
             body: req.body.body,
