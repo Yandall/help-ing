@@ -71,7 +71,8 @@ async function saveFile(req, res) {
             author: req.body.author,
             post_date: req.body.post_date,
             file: req.file.originalname,
-            file: fileName
+            file: fileName,
+            likes : 0
         }
         console.log(post.post_date)
         await createPost(post)
