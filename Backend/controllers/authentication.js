@@ -30,7 +30,7 @@ async function getUser(req, res) {
     const connection = await db.getConnection()
 
     try {
-        var filter = {"email": req.email, "password": md5(req.password)}
+        var filter = {"email": req.email, "password": req.password}
         let dbo = connection.db('helping')
         let cursor = dbo.collection('users').find(filter)
         let values = await cursor.toArray()
@@ -70,8 +70,8 @@ let validate_user = (req, res) => {
                     message: "Persona autenticada",
                     nickname: answer.nickname,
                     email: answer.email,
-                    range: answer.range
-
+                    range: answer.range,
+                    image: answer.image
                 });
             } else {
                 res.status(400).send({

@@ -66,7 +66,7 @@
         Búsqueda
       </h1>
 
-        <b-modal id="modal-1" title="Perfil" hide-footer="true">
+        <b-modal id="modal-1" title="Perfil" >
           <img :src="image" height="100" width="100" style="margin: 10px" />
           <p class="my-4">Nombre de usuario: {{ nickname }}</p>
           <p class="my-4">Correo electronico: {{ email }}</p>
@@ -191,10 +191,11 @@ export default {
       return pageNum === 1 ? "?" : `?page=${pageNum}`;
     },
     logOut() {
-      this.$router.push("/login");
-      localStorage.setItem("nickname", "");
-      localStorage.setItem("email", "");
-      localStorage.setItem("image", "");
+      this.$router.push("/login")
+      localStorage.setItem("nickname", "")
+      localStorage.setItem("email", "")
+      localStorage.setItem("image", "")
+      localStorage.setItem("range", "")
     },
     cargarPerfil() {
       this.nickname = localStorage.getItem("nickname");

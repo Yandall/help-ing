@@ -1,9 +1,11 @@
 const db = require('../services/mongoDB')
+const md5 = require('md5')
 
 async function getUser (req,res)  {
     const connection = await db.getConnection()
     try{
-        var filter = {"email" : req.params.email ,"password" : req.params.password}
+        var filter = {"email" : req.params.email ,"password" : md5(req.params.password)}
+        console.log(filter)
         let dbo = connection.db('helping')
         let cursor =  dbo.collection('users').find(filter)
         let values = await cursor.toArray()
@@ -34,7 +36,6 @@ async function createUser(data) {
 }
 
 async function saveUser(req, res) {
-    console.log(req.body)
     try {
         let user = {
             nickname: req.body.nickname,
@@ -43,11 +44,13 @@ async function saveUser(req, res) {
             range: parseInt(req.body.range),
             image: req.file.originalname
         }
+        console.log(user)
         await createUser(user)
         res.status(200).send('Usuario creado')
     } catch(e) {
         res.status(500).send(e)
         console.error("Error al crear")
+        console.error(e)
     }
 
 }

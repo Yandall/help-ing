@@ -7,7 +7,6 @@ const _controller = require("../controllers/authentication")
 router.use((req, res, next) => {
     try {
         let url = req.url
-        console.log(url)
         if (url === "/") {
             next();
         } else {
