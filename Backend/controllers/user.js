@@ -34,6 +34,4 @@ async function saveUser(req, res) {
 
 }
 
-module.exports = {
-    getUser, saveUser, createUser
-}
+module.exports = {saveUser, createUser}
