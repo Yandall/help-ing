@@ -83,7 +83,7 @@ async function saveFile(req, res) {
     }
 }
 
-async function updatePost(req, res) {
+async function updateLikes(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
@@ -96,8 +96,8 @@ async function updatePost(req, res) {
             }
         }
         let cursor = dbo.collection('posts').find(filter)
-        let values = await cursor.toArray()
         const result = await dbo.collection('posts').updateOne(filter, updateDoc)
+        let values = await cursor.toArray()
         res.status(200).send(values)
     } catch (e) {
         res.status(500).send('Hubo un error')
@@ -108,5 +108,5 @@ async function updatePost(req, res) {
     }
 }
 module.exports = {
-    getPosts, searchPost, saveFile, updatePost
+    getPosts, searchPost, saveFile, updateLikes
 }
