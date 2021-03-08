@@ -81,6 +81,27 @@ async function saveFile(req, res) {
     }
 }
 
+async function updatePost(data = {}) {
+    const connection = await db.getConnection()
+    try {
+        let dbo = connection.db('helping')
+
+        const filter = {_id: data._id}
+
+        const updateDoc = {
+            $inc: {
+                likes: 1
+            }
+        }
+
+        const result = await dbo.collection('posts').updateOne(filter, updateDoc)
+    } catch (e) {
+        console.log(e)
+    } finally {
+        if (connection.isConnected())
+            await connection.close()
+    }
+}
 module.exports = {
-    getPosts, searchPost, saveFile
+    getPosts, searchPost, saveFile, updatePost
 }
