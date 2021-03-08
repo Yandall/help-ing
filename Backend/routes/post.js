@@ -25,5 +25,6 @@ var upload = multer({ storage: storage,
 router.get('/:page', post_controller.getPosts)
 router.get('/:type/:input', post_controller.searchPost)
 router.post('/saveFile', upload.single('file'), post_controller.saveFile)
+router.post(('/updateDoc'), post_controller.updatePost)
 
 module.exports = router

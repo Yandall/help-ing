@@ -1,4 +1,5 @@
 const db = require('../services/mongoDB')
+const mongo = require("mongodb")
 const fs = require('fs')
 
 async function getPosts(req,res) {
@@ -81,21 +82,24 @@ async function saveFile(req, res) {
     }
 }
 
-async function updatePost(data = {}) {
+async function updatePost(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
-
-        const filter = {_id: data._id}
-
+        let id = new mongo.ObjectID(req.body._id)
+        const filter = {_id : id }
+        console.log(filter)
         const updateDoc = {
             $inc: {
-                likes: 1
+                "likes": 1
             }
         }
-
+        let cursor = dbo.collection('posts').find(filter)
+        let values = await cursor.toArray()
         const result = await dbo.collection('posts').updateOne(filter, updateDoc)
+        res.status(200).send(values)
     } catch (e) {
+        res.status(500).send('Hubo un error')
         console.log(e)
     } finally {
         if (connection.isConnected())
