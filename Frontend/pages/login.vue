@@ -251,9 +251,16 @@ export default {
           return;
         }
 
+        if(this.tempUser.clave == ""){
+          alert("Todos los campo son obligatorios");
+          return;
+        }else {
+          formData.append("password", md5(this.tempUser.clave));
+        }
+
         formData.append("nickname", this.tempUser.nickname);
         formData.append("email", this.tempUser.email);
-        formData.append("password", md5(this.tempUser.clave));
+
         formData.append("range", this.tempUser.range);
         const url = "http://localhost:8080/users/saveUser";
         const res = await Axios.post(url, formData);
