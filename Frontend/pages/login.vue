@@ -9,7 +9,7 @@
             <div class="tittle">HELP ING</div>
           </div>
 
-          <b-img src="../ingedraw.jpg" height="450px"></b-img>
+          <b-img src="https://previews.123rf.com/images/quartadis/quartadis1705/quartadis170500156/78960794-ingeniero-mantiene-en-sus-manos-el-dibujo-con-el-plan-de-construcci%C3%B3n-habla-en-smartphone-con-un-equipo.jpg" height="450px"></b-img>
         </b-col>
         <b-col align-self="center">
           <b-form action="javascript:void(0)">
