@@ -11,7 +11,16 @@ var storage = multer.diskStorage({
 
 })
 
-var upload = multer({ storage: storage })
+var upload = multer({ storage: storage,
+    fileFilter(req, file, next) {
+        const isPhoto = file.mimetype.startsWith('image/');
+        const isPdf = file.mimetype.startsWith('application/pdf');
+        if (isPhoto || isPdf) {
+            next(null, true);
+        } else {
+            next({message: "Formato no valido solo puedes adjuntar imagenes"}, false);
+        }
+    } })
 
 router.get('/:page', post_controller.getPosts)
 router.get('/:type/:input', post_controller.searchPost)

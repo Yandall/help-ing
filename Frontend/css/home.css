@@ -1,5 +1,5 @@
-.card{
-  width: auto;
+.card-body{
+  width: 545px;
 }
 
 .card-img-top{
@@ -10,4 +10,22 @@
 
 .btnBuscar{
   margin-right: 20px;
+}
+
+.card-post{
+  width: 545px;
+  max-height: 900px;
+}
+
+.card-text{
+  position: static;
+  padding: 15px;
+}
+
+.card-footer{
+  position: static;
+}
+
+.mb-2{
+  position: static;
 }

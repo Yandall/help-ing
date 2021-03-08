@@ -12,20 +12,23 @@
             size="sm"
             style="margin-inline: 5px"
             :to="{ name: 'createPost' }"
-          >Crear Publicación</b-button>
+          >Crear Publicación
+          </b-button>
           <b-button
             variant="light"
             size="sm"
             v-if="mod"
             style="margin-inline: 5px"
             :to="{ name: 'createUC' }"
-          >Crear Contenido Universal</b-button>
+          >Crear Contenido Universal
+          </b-button>
           <b-button
             variant="light"
             size="sm"
             style="margin-inline: 5px"
             :to="{ name: 'universalContent' }"
-          >Contenido Universal</b-button>
+          >Contenido Universal
+          </b-button>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -39,10 +42,11 @@
               unchecked-value="title"
               style="margin-right: 10px; color: white;"
             >
-            Tags
+              Tags
             </b-form-checkbox>
-            <b-form-input size="sm" class="mr-sm-2" v-model="search" placeholder="Buscar" style="min-width: 300px"></b-form-input>
-            <b-button size="sm"  class="btnBuscar" @click="searchPost">Buscar</b-button>
+            <b-form-input size="sm" class="mr-sm-2" v-model="search" placeholder="Buscar"
+                          style="min-width: 300px"></b-form-input>
+            <b-button size="sm" class="btnBuscar" @click="searchPost">Buscar</b-button>
 
           </b-nav-form>
 
@@ -67,11 +71,11 @@
         Búsqueda
       </h1>
 
-        <b-modal id="modal-1" title="Perfil">
-          <img :src="image" height="100" width="100" style="margin: 10px" />
-          <p class="my-4">Nombre de usuario: {{ nickname }}</p>
-          <p class="my-4">Correo electronico: {{ email }}</p>
-        </b-modal>
+      <b-modal id="modal-1" title="Perfil" :hide-footer="true">
+        <img :src="image" height="100" width="100" style="margin: 10px"/>
+        <p class="my-4">Nombre de usuario: {{ nickname }}</p>
+        <p class="my-4">Correo electronico: {{ email }}</p>
+      </b-modal>
 
 
       <b-list-group>
@@ -80,23 +84,25 @@
           v-for="item in post_list"
           class="card-post"
           style="border: none"
-          v-bind:key="item._id"
         >
-            <b-card
-              :title="item.title"
-              :img-src="'posts/' + item.file"
-              img-alt=""
-              img-top
-              tag="article"
-              style="max-width: 60rem;"
-              class="mb-2"
-              :footer="item.author + ' ' + item.post_date"
-            >
-              <b-card-text>
-                {{ item.body }}
-                <br>Tags: <b-badge pill variant="secondary" v-for="tag in item.tags" style="margin-right: 5px">{{tag}}</b-badge>
-              </b-card-text>
-            </b-card>
+          <b-card
+            :title="item.title"
+            :img-src="'posts/' + item.file"
+            img-alt=""
+            img-bottom
+            tag="article"
+            style="max-width: 60rem;"
+            class="mb-2"
+            :footer="item.author + ' ' + item.post_date"
+
+          >
+            <b-card-text>
+              {{ item.body }}
+              <br>Tags:
+              <b-badge pill variant="secondary" v-for="tag in item.tags" style="margin-right: 5px">{{ tag }}</b-badge>
+            </b-card-text>
+
+          </b-card>
         </b-list-group-item>
       </b-list-group>
 
@@ -122,6 +128,7 @@ export default {
   beforeMount() {
     this.loadPosts(new URLSearchParams(location.search).get("page"));
     this.cargarPerfil();
+
   },
   data() {
     return {
@@ -150,7 +157,7 @@ export default {
     };
   },
   methods: {
-    searchPost(){
+    searchPost() {
       this.isSearching = true
       Axios.get(`${this.url}/${this.typeSearch}/${this.search}`)
         .then(res => {
@@ -198,14 +205,20 @@ export default {
       localStorage.setItem("image", "");
     },
     cargarPerfil() {
-      this.nickname = localStorage.getItem("nickname");
-      this.email = localStorage.getItem("email");
-      this.image = localStorage.getItem("image");
-      if(localStorage.getItem("range") == 1){
-        this.mod = false
+      if (localStorage.getItem("nickname") == "" || localStorage.getItem("email") == "") {
+        this.$router.push("/login")
+
       } else {
-        this.mod = true
+        this.nickname = localStorage.getItem("nickname");
+        this.email = localStorage.getItem("email");
+        this.image = localStorage.getItem("image");
+        if (localStorage.getItem("range") == 1) {
+          this.mod = false
+        } else {
+          this.mod = true
+        }
       }
+
     }
   }
 };
@@ -225,7 +238,7 @@ export default {
 
 .title {
   font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -242,7 +255,7 @@ export default {
 }
 </style>
 
-<style src="../css/home.css" />
+<style src="../css/home.css"/>
 
 
 

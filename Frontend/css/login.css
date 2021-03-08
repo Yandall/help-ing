@@ -1,4 +1,4 @@
-.card {
+.card-login{
     background-color: white;
     border-radius: 30px;
     display: flex;
@@ -53,10 +53,3 @@ body {
   height: 700px;
 }
 
-.card-title{
-  font-family: "Oswald", sans-serif;
-  margin: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: #ED0034;
-}
