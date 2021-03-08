@@ -89,7 +89,7 @@
             :title="item.title"
             :img-src="'posts/' + item.file"
             img-alt=""
-            img-top
+            img-bottom
             tag="article"
             style="max-width: 60rem;"
             class="mb-2"
