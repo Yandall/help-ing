@@ -6,7 +6,7 @@ const uri = process.env.DB_URI
  * @returns {Promise<MongoClient>}
  */
 async function getConnection() {
-    let client = new MongoClient(uri)
+    let client = new MongoClient(uri,  { useNewUrlParser: true, useUnifiedTopology: true })
     return await client.connect()
 }
 
