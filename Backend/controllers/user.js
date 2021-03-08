@@ -1,6 +1,4 @@
 const db = require('../services/mongoDB')
-const md5 = require("md5")
-
 
 async function createUser(data) {
     const connection = await db.getConnection()
@@ -8,7 +6,7 @@ async function createUser(data) {
         let dbo = connection.db('helping')
         await dbo.collection('users').insertOne(data)
     }catch (e) {
-        console.log(e)
+        throw e
     } finally {
         if (connection.isConnected())
             await connection.close()
@@ -21,7 +19,7 @@ async function saveUser(req, res) {
     try {
         let user = {
             nickname: req.body.nickname,
-            password: md5(req.body.password),
+            password: req.body.password,
             email: req.body.email,
             range: parseInt(req.body.range),
             image: req.file.originalname
@@ -29,7 +27,7 @@ async function saveUser(req, res) {
         await createUser(user)
         res.status(200).send('Usuario creado')
     } catch(e) {
-        res.status(500).send(e)
+        res.status(500).send("Erorr, usuario ya existente")
         console.error("Error al crear")
         console.log(e)
     }
@@ -37,5 +35,5 @@ async function saveUser(req, res) {
 }
 
 module.exports = {
-    saveUser, createUser
+    saveUser
 }

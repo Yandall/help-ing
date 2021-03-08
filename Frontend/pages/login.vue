@@ -35,11 +35,11 @@
                 </b-form-group>
 
                 <b-form-group @submit.stop.prevent >
-                  <b-form-invalid-feedback :state="validar_clave">*</b-form-invalid-feedback>
+                  <b-form-invalid-feedback :state="validar_password">*</b-form-invalid-feedback>
                   <b-form-input
                     class="form-control"
                     type="password"
-                    v-model="usuario.clave"
+                    v-model="usuario.password"
                     placeholder="Ingrese su contraseña"
                     id="password"
                     size="lg"/>
@@ -49,17 +49,16 @@
                 <br>
 
 
-                <b-button @click="login()" block v
-                          ariant="danger">Ingresar</b-button>
+                <b-button type="submit" @click="login()" block variant="danger">Ingresar</b-button>
 
                 <br>
 
                 <b-button
-                    id="show-btn"
-                    @click="mostrar_modal"
-                    block
-                    variant="outline-danger">Crear una Cuenta</b-button>
-                </b-card>
+                  id="show-btn"
+                  @click="mostrar_modal"
+                  block
+                  variant="outline-danger">Crear una Cuenta</b-button>
+              </b-card>
 
             </b-card-group>
             <b-modal ref="my-modal" hide-footer title="Crear una cuenta">
@@ -137,9 +136,10 @@
 </template>
 
 <script>
-import Axios from "axios";
+import Axios from "axios"
 import { BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
+import md5 from 'md5'
 export default {
   beforeMount() {
 
@@ -155,7 +155,7 @@ export default {
       file: [],
       usuario: {
         email: "",
-        clave: ""
+        password: ""
       },
       tempUser: {
         email: "",
@@ -173,8 +173,8 @@ export default {
       return this.usuario.email.length > 0;
     },
 
-    validar_clave() {
-      return this.usuario.clave.length > 0;
+    validar_password() {
+      return this.usuario.password.length > 0;
     }
   },
   methods: {
@@ -187,7 +187,7 @@ export default {
       if (localStorage.getItem("nickname") == ""){
         this.$router.push("/login");
       } else{
-        this.$router.push("/home");
+        this.$router.push("/");
       }
       let url = "http://localhost:8080/";
       this.url = url;
@@ -196,9 +196,11 @@ export default {
       let url =
         "http://localhost:8080/login"
 
-      if (this.usuario.email.length > 0 && this.usuario.clave.length > 0) {
-        this.usuario.password = this.usuario.clave
-        Axios.post(url, this.usuario)
+      if (this.usuario.email.length > 0 && this.usuario.password.length > 0) {
+        let payload = {... this.usuario}
+        payload.password = md5(payload.password)
+
+        Axios.post(url, payload)
           .then(response => {
             let user = this.user
             console.log("User", user)
@@ -214,12 +216,12 @@ export default {
                 localStorage.setItem(
                   "image",
                   "https://external-content.duckduckgo.com/iu/" +
-                    "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
-                    "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"
+                  "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
+                  "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"
                 );
               }
 
-              this.$router.push("/home");
+              this.$router.push("/");
               return;
             } else {
               alert("Asegurese de que todos los campos esten correctos");
@@ -251,13 +253,14 @@ export default {
 
         formData.append("nickname", this.tempUser.nickname);
         formData.append("email", this.tempUser.email);
-        formData.append("password", this.tempUser.clave);
+        formData.append("password", md5(this.tempUser.clave));
         formData.append("range", this.tempUser.range);
         const url = "http://localhost:8080/users/saveUser";
         const res = await Axios.post(url, formData);
         alert(res.data);
         this.clearInputs();
       } catch (e) {
+        alert("Error al crear el usuario")
         console.error(e);
       }
     },
