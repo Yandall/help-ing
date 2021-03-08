@@ -3,11 +3,11 @@ const router = express.Router();
 const _controller = require("../controllers/authentication")
 
 //Middleware
-/*
+
 router.use((req, res, next) => {
     try {
         let url = req.url
-        if (url === "/") {
+        if (url === "/login") {
             next();
         } else {
             let token = req.headers.token;
@@ -22,25 +22,10 @@ router.use((req, res, next) => {
         })
     }
 })
-*/
+
 
 router.post("/", _controller.validate_user)
 
-router.get("/verify", (req, res) => {
-    try {
-        let token = req.headers.token;
-        let verify = _controller.validar_token(token);
-        res.status(200).send({
-            ok: true,
-            info: verify,
-            mensaje: "Autenticado.",
-        });
-    } catch (error) {
-        res.status(400).send({
-            ok: false,
-            message: "No esta autenticado"
-        })
-    }
-})
+router.get("/verify", _controller.verify_authentication)
 
 module.exports = router;

@@ -45,6 +45,7 @@ async function getUser(req, res) {
 }
 
 let generate_token = (user) => {
+    delete user.password
     return jwt.sign(user, SECRET_KEY, {expiresIn: "1h"});
 }
 
@@ -82,11 +83,29 @@ let validate_user = (req, res) => {
     }
 }
 
+let verify_authentication = (req, res) => {
+
+    try {
+        let token = req.headers.token;
+        validate_token(token);
+        res.status(200).send({
+            ok: true,
+            mensaje: "Autenticado.",
+        });
+    } catch (error) {
+        res.status(400).send({
+            ok: false,
+            message: "No esta autenticado"
+        })
+    }
+}
+
 module.exports = {
     validate_data,
     getUser,
     generate_token,
     validate_token,
     decode_token,
-    validate_user
+    validate_user,
+    verify_authentication
 }
