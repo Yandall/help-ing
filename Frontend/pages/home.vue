@@ -209,7 +209,6 @@ export default {
           });
 
           this.post_list = data;
-          console.log("aquifuenpara",this.post_list)
           this.numberPages = Math.ceil(res.data.cantPosts / this.perPage);
         })
         .catch(e => {
