@@ -24,18 +24,29 @@
 
                 <b-form-group @submit.stop.prevent >
                   <b-form-invalid-feedback :state="validar_email">*</b-form-invalid-feedback>
+                  <b-input-group size="sm" class="mb-2">
+                    <b-input-group-prepend is-text>
+                      <b-icon icon="envelope"></b-icon>
+                    </b-input-group-prepend>
                   <b-form-input
                     class="form-control"
                     v-model="usuario.email"
                     type="email"
                     placeholder="Ingrese su correo electronico"
                     id="email"
-                    size="lg"/>
+                    size="lg"
+                    icon="envelope"
+                  />
 
+                  </b-input-group>
                 </b-form-group>
 
                 <b-form-group @submit.stop.prevent >
                   <b-form-invalid-feedback :state="validar_password">*</b-form-invalid-feedback>
+                  <b-input-group size="sm" class="mb-2">
+                    <b-input-group-prepend is-text>
+                      <b-icon icon="shield-lock"></b-icon>
+                    </b-input-group-prepend>
                   <b-form-input
                     class="form-control"
                     type="password"
@@ -43,6 +54,7 @@
                     placeholder="Ingrese su contraseña"
                     id="password"
                     size="lg"/>
+                  </b-input-group>
 
                 </b-form-group>
 
