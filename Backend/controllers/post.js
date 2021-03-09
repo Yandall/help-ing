@@ -83,22 +83,22 @@ async function saveFile(req, res) {
     }
 }
 
-async function updateLikes(req, res) {
+async function  updateLikes(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
-        let id = new mongo.ObjectID(req.body._id)
-        const filter = {_id : id }
-        console.log(filter)
-        const updateDoc = {
-            $inc: {
-                "likes": 1
-            }
+        let id_post = new mongo.ObjectID(req.body.id_post)
+        let id_user = req.body.id_user
+        console.log("usuario", id_user, "post", id_post)
+        let result = await dbo.collection('posts').updateOne({_id: id_post},
+            {$pull: {"likes": id_user}
+        })
+        if(result.modifiedCount == 0) {
+            result = await dbo.collection('posts').updateOne({_id: id_post},
+                {$push: {"likes": id_user}})
         }
-        let cursor = dbo.collection('posts').find(filter)
-        const result = await dbo.collection('posts').updateOne(filter, updateDoc)
-        let values = await cursor.toArray()
-        res.status(200).send(values)
+
+        res.status(200).send("Like actualizado")
     } catch (e) {
         res.status(500).send('Hubo un error')
         console.log(e)
