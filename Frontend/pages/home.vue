@@ -62,6 +62,11 @@
       </b-collapse>
     </b-navbar>
 
+    <b-modal id="modal-1" title="Perfil" >
+      <img :src="image" height="100" width="100" style="margin: 10px" />
+      <p class="my-4">Nombre de usuario: {{ nickname }}</p>
+      <p class="my-4">Correo electronico: {{ email }}</p>
+    </b-modal>
 
     <div class="container">
       <h1 class="title" id="home.title" v-if="!isSearching">
@@ -71,13 +76,6 @@
         Búsqueda
       </h1>
 
-      <b-modal id="modal-1" title="Perfil" :hide-footer="true">
-        <img :src="image" height="100" width="100" style="margin: 10px"/>
-        <p class="my-4">Nombre de usuario: {{ nickname }}</p>
-        <p class="my-4">Correo electronico: {{ email }}</p>
-      </b-modal>
-
-
       <b-list-group>
         <b-list-group-item
           :key="item._id"
@@ -85,23 +83,43 @@
           class="card-post"
           style="border: none"
         >
+
+          <h2>{{item.title}}</h2>
           <b-card
-            :title="item.title"
             :img-src="'posts/' + item.file"
             img-alt=""
-            img-bottom
             tag="article"
+            img-top
             style="max-width: 60rem;"
             class="mb-2"
-            :footer="item.author + ' ' + item.post_date"
-
+            footer-tag="footer"
           >
             <b-card-text>
-              {{ item.body }}
-              <br>Tags:
-              <b-badge pill variant="secondary" v-for="tag in item.tags" style="margin-right: 5px">{{ tag }}</b-badge>
-            </b-card-text>
 
+              {{ item.body }}
+              <br>Tags: <b-badge pill variant="secondary" v-for="tag in item.tags"  style="margin-right: 5px">{{tag}}</b-badge>
+            </b-card-text>
+            <template #footer>
+              <div class="post-footer">
+                <div v-if="!item.likes.includes(user_id)">
+                  <b-button size="sm" variant="secondary" class="mb-2 like-button-no-vote" @click="updateLike(item, false)">
+                    <b-icon icon="heart-fill" aria-label="Help"></b-icon>
+                    <p>{{item.nlikes}}</p>
+                  </b-button>
+                </div>
+                <div v-else>
+                  <b-button size="sm" variant="secondary" class="mb-2 like-button-vote" @click="updateLike(item, true)">
+                    <b-icon icon="heart-fill" aria-label="Help"></b-icon>
+                    <p>{{item.nlikes}}</p>
+                  </b-button>
+                </div>
+
+                <div class="post-footer-info">
+                  {{item.author}}  {{item.post_date}}
+                </div>
+              </div>
+
+            </template>
           </b-card>
         </b-list-group-item>
       </b-list-group>
@@ -137,6 +155,7 @@ export default {
       nickname: "",
       email: "",
       image: "",
+      user_id: "",
       fields: [
         {
           key: "title",
@@ -156,6 +175,7 @@ export default {
       isSearching: false
     };
   },
+
   methods: {
     searchPost() {
       this.isSearching = true
@@ -185,18 +205,33 @@ export default {
           let data = res.data.values;
           data.forEach(item => {
             item.post_date = item.post_date.substring(0, 10);
+            item.nlikes = (item.likes === "")? item.likes.length - 1: item.likes.length
           });
-          console.log(data)
+
           this.post_list = data;
+          console.log("aquifuenpara",this.post_list)
           this.numberPages = Math.ceil(res.data.cantPosts / this.perPage);
-          console.log(this.numberPages);
         })
         .catch(e => {
           console.log(e);
         });
     },
-    linkGen(pageNum) {
-      return pageNum === 1 ? "?" : `?page=${pageNum}`;
+    updateLike(post, isOldLike) {
+      let payload = {id_post: post._id, id_user: this.user_id}
+      console.log(post)
+      Axios.post(this.url + "/updateLikes", payload)
+      .then(res => {
+        if (isOldLike) {
+          post.nlikes --
+          let idx = post.likes.indexOf(this.user_id)
+          post.likes.splice(idx, 1)
+        } else {
+          post.nlikes ++
+          post.likes.push(this.user_id)
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     logOut() {
       this.$router.push("/login");
@@ -212,14 +247,17 @@ export default {
         this.nickname = localStorage.getItem("nickname");
         this.email = localStorage.getItem("email");
         this.image = localStorage.getItem("image");
+        this.user_id = localStorage.getItem("id");
         if (localStorage.getItem("range") == 1) {
           this.mod = false
         } else {
           this.mod = true
         }
       }
-
-    }
+    },
+    linkGen(pageNum) {
+      return pageNum === 1 ? "?" : `?page=${pageNum}`;
+    },
   }
 };
 </script>
@@ -253,9 +291,70 @@ export default {
 .navbar {
   background-color: #A00001;
 }
+
+.post-footer{
+  height: inherit;
+  width: inherit;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.like-button-no-vote{
+  margin-right: 15px;
+  margin-top: 0.5rem;
+  background-color: rgba(0,0,0,0);
+  color: darkgrey;
+  border-color: darkgrey;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.like-button-no-vote p{
+  margin-bottom: 0;
+  margin-left: 0.3rem;
+}
+
+.like-button-no-vote:hover{
+  margin-right: 15px;
+  margin-top: 0.5rem;
+  background-color: #A00001;
+  color: white;
+  border-color: #A00001;
+}
+
+.like-button-vote{
+  margin-right: 15px;
+  margin-top: 0.5rem;
+  background-color: #A00001;
+  color: white;
+  border-color: #A00001;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.like-button-vote p{
+  margin-bottom: 0;
+  margin-left: 0.3rem;
+}
+
+.like-button-vote:hover{
+  margin-right: 15px;
+  margin-top: 0.5rem;
+  background-color: rgba(0,0,0,0);
+  color: darkgrey;
+  border-color: darkgrey;
+}
+
+.post-footer-info{
+  color: darkgrey;
+}
+
 </style>
 
-<style src="../css/home.css"/>
 
 
 

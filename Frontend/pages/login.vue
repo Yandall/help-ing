@@ -204,12 +204,13 @@ export default {
           .then(response => {
             let user = this.user
             console.log("User", user)
-            let data = response.data;
-            console.log("Data:", data);
+            let data = response.data
+            console.log("Data:", data)
             if (data.ok) {
-              localStorage.setItem("nickname", data.nickname);
-              localStorage.setItem("email", data.email);
+              localStorage.setItem("nickname", data.nickname)
+              localStorage.setItem("email", data.email)
               localStorage.setItem("range", data.range)
+              localStorage.setItem("id", data._id)
               if (data.image) {
                 localStorage.setItem("image", "users/" + data.image);
               } else {

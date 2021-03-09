@@ -70,7 +70,8 @@ let validate_user = (req, res) => {
                     message: "Persona autenticada",
                     nickname: answer.nickname,
                     email: answer.email,
-                    range: answer.range
+                    range: answer.range,
+                    _id: answer._id
 
                 });
             } else {

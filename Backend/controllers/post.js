@@ -13,7 +13,7 @@ async function getPosts(req,res) {
             .limit(nPerPage)
         let values = await cursor.toArray()
         let cantPosts = await dbo.collection('posts').countDocuments({})
-
+        console.log(values)
         res.status(200).send({values, cantPosts})
     } catch (e) {
         res.status(500).send('Hubo un error')
@@ -70,9 +70,8 @@ async function saveFile(req, res) {
             tags: req.body.tags.split(','),
             author: req.body.author,
             post_date: req.body.post_date,
-            file: req.file.originalname,
             file: fileName,
-            likes : 0
+            likes : []
         }
         console.log(post.post_date)
         await createPost(post)
@@ -87,6 +86,7 @@ async function  updateLikes(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
+        console.log("idpost", req.body.id_post)
         let id_post = new mongo.ObjectID(req.body.id_post)
         let id_user = req.body.id_user
         console.log("usuario", id_user, "post", id_post)
