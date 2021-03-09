@@ -1,6 +1,64 @@
 <template>
+
+  <div>
+  <b-navbar toggleable="lg" type="dark">
+    <b-navbar-brand href="home">Helping</b-navbar-brand>
+
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav>
+        <b-button
+          variant="light"
+          size="sm"
+          style="margin-inline: 5px"
+          :to="{ name: 'createUC' }"
+        >Crear Contenido Universal
+        </b-button>
+
+        <b-button
+          variant="light"
+          size="sm"
+          style="margin-inline: 5px"
+          :to="{ name: 'universalContent' }"
+        >Contenido Universal
+        </b-button>
+      </b-navbar-nav>
+
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-nav-form>
+          <b-form-checkbox
+            id="checkbox-tags"
+            v-model="typeSearch"
+            name="checkbox-tags"
+            value="tags"
+            unchecked-value="title"
+            style="margin-right: 10px; color: white;"
+          >
+            Tags
+          </b-form-checkbox>
+          <b-form-input size="sm" class="mr-sm-2" v-model="search" placeholder="Buscar"
+                        style="min-width: 300px"></b-form-input>
+          <b-button size="sm" class="btnBuscar" @click="searchPost">Buscar</b-button>
+
+        </b-nav-form>
+
+        <b-nav-item-dropdown right>
+          <!-- Using 'button-content' slot -->
+          <template #button-content>
+            <em>Usuario</em>
+          </template>
+          <b-dropdown-item href="#" v-b-modal.modal-1>Perfil</b-dropdown-item>
+          <b-dropdown-item href="#" @click="logOut">Salir</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
+
+
   <div class="container">
-    
+
      <h1 class="title" id="home.title">
        Contenido Universal</h1>
       <b-list-group>
@@ -17,19 +75,20 @@
             img-top
             style="max-width: 45rem;"
             class="mb-2"
-            
+
             :footer="item.url">
               <b-card-text>
                Autor: {{item.author}}
                <br>
                Tipo: {{item.type}}
-             
+
               <br>
             </b-card-text>
             <div></div>
           </b-card>
         </b-list-group-item>
       </b-list-group>
+  </div>
   </div>
 </template>
 
@@ -38,6 +97,7 @@ import axios from "axios";
 import config from "../assets/config";
 import Vue from "vue";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
+import Axios from "axios";
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
@@ -48,6 +108,11 @@ export default {
     data() {
         return {
             universalContents: [],
+            url: `${config.url_api}/uc`,
+            typeSearch: 'title',
+            search: '',
+            isSearching: false,
+            post_list: null
 
 
         };
@@ -61,14 +126,11 @@ export default {
     computed: {},
 
     methods: {
-
-
-
         loadUC() {
             console.log(config.url_api + "/uc")
             axios.get(config.url_api + "/uc")
             .then(res => {
-               
+
                 let data = res.data;
 
                 for(let i in data){
@@ -85,7 +147,18 @@ export default {
                 }
             })
             .catch(err => console.log(err))
-        }
+        },
+
+      logOut() {
+        this.$router.push("/login");
+        localStorage.setItem("nickname", "");
+        localStorage.setItem("email", "");
+        localStorage.setItem("image", "");
+      },
+
+      searchPost() {
+        //TO DO
+      },
 
 
     }
@@ -95,7 +168,7 @@ export default {
 
 </script>
 
-
+<style src="../css/uc.css"/>
 <style scoped>
 .container {
   margin: 0 auto;
