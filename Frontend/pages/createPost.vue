@@ -91,7 +91,8 @@ import config from "../assets/config"
           const res = await Axios.post(url, formData)
           alert(res.data)
         } catch(e) {
-          console.error(e)
+          console.error(e)      
+          alert("Recuerda que solo puedes adjuntar imagenes tipo jpg png jpeg o PDF, vuelvelo a intentar")
         }
 
       },

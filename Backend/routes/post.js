@@ -19,6 +19,7 @@ var upload = multer({ storage: storage,
             next(null, true);
         } else {
             next({message: "Formato no valido solo puedes adjuntar imagenes o pdf"}, false);
+            console.log("Intentaste subir un archivo invalido mmgvo")
         }
     } })
 
