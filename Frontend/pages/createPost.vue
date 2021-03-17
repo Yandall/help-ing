@@ -95,7 +95,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
     },
 
     mounted() {
-      alert("Para subir archivo en el post, se debe dar click primero en el boton 'upload file' ")
+      //alert("Para subir archivo en el post, se debe dar click primero en el boton 'upload file' ")
     },
 
     methods: {
@@ -134,6 +134,10 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
         this.email = localStorage.getItem("email")
         this.image = localStorage.getItem("image")
       },
+
+      /**
+       * Se sube el archivo a cloudinary, y se obtiene el link que queda asociado al post
+       */
       subirImagen() {
       const IMG = document.getElementById('image');
       const formData = new FormData();
@@ -160,7 +164,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
         console.log("Hubo un error");
         console.log(error);
       })
-    }
+      }
     }
   }
 </script>

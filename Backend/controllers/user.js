@@ -33,7 +33,7 @@ async function saveUser(req, res) {
             password: req.body.password,
             email: req.body.email,
             range: parseInt(req.body.range),
-            image: req.file.originalname
+            image: req.body.file
         }
         await createUser(user)
         res.status(200).send('Usuario creado')

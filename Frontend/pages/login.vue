@@ -128,11 +128,10 @@
                     placeholder="Choose an image"
                     drop-placeholder="Drop file here..."
                   ></b-form-file>
+                  <b-button @click="subirImagen()" variant="outline-danger">Subir imagen</b-button>
                 </b-form-group>
               </form>
-              <b-button @click="crearCuenta(file)" variant="outline-danger"
-              >Crear cuenta</b-button
-              >
+              <b-button @click="crearCuenta(file)" variant="outline-danger">Crear cuenta</b-button>
             </b-modal>
           </b-form>
 
@@ -152,6 +151,8 @@ import Axios from "axios"
 import { BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 import md5 from 'md5'
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/helping-developer/image/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
 export default {
   beforeMount() {
 
@@ -164,7 +165,7 @@ export default {
       estado_clave: null,
       url: "",
       message: "INICIAR SESIÓN",
-      file: [],
+      file: "",
       usuario: {
         email: "",
         password: ""
@@ -284,11 +285,39 @@ export default {
         console.error(e);
       }
     },
+
+    /**
+       * Se sube el archivo a cloudinary, y se obtiene el link que queda asociado al post
+       */
+      subirImagen() {
+      const IMG = document.getElementById('file');
+      const formData = new FormData();
+
+      formData.append('file', this.file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      Axios.post(CLOUDINARY_URL, formData, {
+        headers:{
+          'content-type':'multipart/form-data' 
+        }
+      }).then((response) => {
+        console.log("Imagen de usuario agregada");
+        console.log(response);
+        this.file = response.data.secure_url;
+        console.log("File: " + this.file)
+        IMG.src = response.data.secure_url;
+      })
+      .catch((error) =>{
+        console.log("Hubo un error");
+        console.log(error);
+      })
+      },
+
     clearInputs() {
       this.tempUser.nickname = "";
       this.tempUser.clave = "";
       this.tempUser.email = "";
-      this.file = [];
+      this.file = "";
     },
 
     mostrar_modal() {
