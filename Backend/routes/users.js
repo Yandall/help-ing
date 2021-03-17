@@ -22,6 +22,7 @@ var upload = multer({ storage: storage,
       }
   } })
 
+//endpoint para guardar un usuario
 router.post('/saveUser', upload.single('file'), user_controller.saveUser)
 
 module.exports = router;

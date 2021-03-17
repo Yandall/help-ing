@@ -1,3 +1,4 @@
+//se importan las librerias y archivos necesarios
 const {MongoClient} = require('mongodb')
 const uri = process.env.DB_URI
 

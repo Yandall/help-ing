@@ -1,7 +1,14 @@
+//se importan las librerias y archivos necesarios
 const db = require('../services/mongoDB')
 const mongo = require("mongodb")
 const fs = require('fs')
 
+/**
+ * Función para obtener todos los registros de la colección 'posts' que estan en la base de datos, con saltos para mostrar la información
+ * por paginas
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
 async function getPosts(req,res) {
     const connection = await db.getConnection()
     try {
@@ -25,6 +32,11 @@ async function getPosts(req,res) {
     }
 }
 
+/**
+ * Función para buscar y obtener lso registros con un filtro que se le pasa por el body
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
 async function searchPost(req,res) {
     const connection = await db.getConnection()
     try {
@@ -46,6 +58,10 @@ async function searchPost(req,res) {
     }
 }
 
+/**
+ * Función para crear un nuevo registro en la colección de 'posts'
+ * @param {*} data contiene la información para crear un nuevo registro en 'posts'
+ */
 async function createPost(data= {}) {
     const connection = await db.getConnection()
     try {
@@ -61,6 +77,12 @@ async function createPost(data= {}) {
 
 }
 
+/**
+ * En este método se capturan los parametros que se enviaron desde el front, para luego mandarlos por parametro al
+ * método 'createPost' y crear el nuevo registro
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http
+ */
 async function saveFile(req, res) {
     try {
         let fileName = (req.file) ? req.file.originalname : ''
@@ -82,6 +104,13 @@ async function saveFile(req, res) {
     }
 }
 
+
+/**
+ * Esta función busca si en el arreglo de los likes de esa publicación esta el id del usuario, saca el id del arreglo(le quita el like)
+ * pero si no esta agrega el id al arreglo de likes(le agrega el like). Esto permite saber cuantos likes tiene cada publicación
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
 async function  updateLikes(req, res) {
     const connection = await db.getConnection()
     try {
@@ -107,6 +136,11 @@ async function  updateLikes(req, res) {
             await connection.close()
     }
 }
+
+//se exportan los métodos y funciones para usarlos despues
 module.exports = {
-    getPosts, searchPost, saveFile, updateLikes
+    getPosts, 
+    searchPost, 
+    saveFile, 
+    updateLikes,
 }

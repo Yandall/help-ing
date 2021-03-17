@@ -1,3 +1,4 @@
+//se importan las librerias y archivos necesarios
 const express = require('express')
 const router = express.Router()
 const post_controller = require('../controllers/post')
@@ -23,9 +24,13 @@ var upload = multer({ storage: storage,
         }
     } })
 
+////endpoint para obtener todas las publicaciones
 router.get('/:page', post_controller.getPosts)
+//endpoint para obtener solo las publicaciones filtradas
 router.get('/:type/:input', post_controller.searchPost)
+//endpoint para guardar la publicación 
 router.post('/saveFile', upload.single('file'), post_controller.saveFile)
+//endpoint para actualizar los likes de la publicación
 router.post(('/updateLikes'), post_controller.updateLikes)
 
 module.exports = router

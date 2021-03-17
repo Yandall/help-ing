@@ -1,5 +1,13 @@
+//se importan las librerias y archivos necesarios
 const db = require("../services/mongoDB");
 
+
+
+/**
+ * Función para obtener todos los registros de la colección 'universal_contents' que estan en la base de datos
+ * @param {*} req  petición enviada desde el front
+ * @param {*} res  contiene la respuesta de la petición http 
+ */
 async function getUC(req, res) {
   const connection = await db.getConnection();
   try {
@@ -18,6 +26,10 @@ async function getUC(req, res) {
   }
 }
 
+/**
+ * Función para crear un nuevo registro en la colección de 'Universal_contents'
+ * @param {*} data contiene la información para crear un nuevo registro en 'universal_contents'
+ */
 async function createUC(data) {
   const connection = await db.getConnection();
   try {
@@ -30,8 +42,14 @@ async function createUC(data) {
   }
 }
 
+/**
+ *En este método se capturan los parametros que se enviaron desde el front, para luego mandarlos por parametro al
+ *método 'createUC' y crear el nuevo registro
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
 async function saveUC(req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   try {
     let uc = {
       title: req.body.title,
@@ -49,6 +67,7 @@ async function saveUC(req, res) {
   }
 }
 
+//se exportan los métodos y funciones para usarlos despues
 module.exports = {
   getUC,
   createUC,

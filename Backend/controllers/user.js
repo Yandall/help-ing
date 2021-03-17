@@ -1,5 +1,10 @@
+//se importan las librerias y archivos necesarios
 const db = require('../services/mongoDB')
 
+/**
+ * Función para crear un nuevo registro en la colección 'users'
+ * @param {*} data contiene la información para crear un nuevo registro en la colección 'users'
+ */
 async function createUser(data) {
     const connection = await db.getConnection()
     try {
@@ -14,8 +19,14 @@ async function createUser(data) {
 
 }
 
+/**
+ * En este método se capturan los parametros que se enviaron desde el front, para luego mandarlos por parametro al
+ * método 'createUser' y crear el nuevo registro
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
 async function saveUser(req, res) {
-    console.log(req.body)
+     //console.log(req.body);
     try {
         let user = {
             nickname: req.body.nickname,
@@ -34,6 +45,7 @@ async function saveUser(req, res) {
 
 }
 
+//se eportan los métodos y funciones para poder utilizarlos luego
 module.exports = {
     saveUser
 }
