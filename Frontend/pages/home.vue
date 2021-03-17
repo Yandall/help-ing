@@ -144,6 +144,7 @@ import config from "../assets/config";
 
 export default {
   beforeMount() {
+    this.cargarPagina()
     this.loadPosts(new URLSearchParams(location.search).get("page"));
     this.cargarPerfil();
 
@@ -151,7 +152,7 @@ export default {
   data() {
     return {
       post_list: null,
-      url: `${config.url_api}/post`,
+      url: `${config.url_api}`,
       nickname: "",
       email: "",
       image: "",
@@ -177,9 +178,26 @@ export default {
   },
 
   methods: {
+    cargarPagina() {
+      let url = config.url_api + "/login/verify";
+      console.log("url" + url)
+      let token = localStorage.getItem("token");
+      this.token = token;
+      Axios
+        .get(url, { headers: { token: token } })
+        .then((response) => { })
+        .catch((error) => {
+          console.log(error);
+          this.$router.push("/login");
+          localStorage.setItem("nickname", "")
+          localStorage.setItem("email", "")
+          localStorage.setItem("range", "")
+          localStorage.setItem("id", "")
+        });
+    },
     searchPost() {
       this.isSearching = true
-      Axios.get(`${this.url}/${this.typeSearch}/${this.search}`)
+      Axios.get(`${this.url}/post/${this.typeSearch}/${this.search}`)
         .then(res => {
           let data = res.data;
           data.forEach(item => {

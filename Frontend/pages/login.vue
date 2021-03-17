@@ -224,6 +224,7 @@ export default {
               localStorage.setItem("email", data.email)
               localStorage.setItem("range", data.range)
               localStorage.setItem("id", data._id)
+              localStorage.setItem("token", data.token)
               if (data.image) {
                 localStorage.setItem("image", "users/" + data.image);
               } else {
@@ -298,7 +299,7 @@ export default {
 
       Axios.post(CLOUDINARY_URL, formData, {
         headers:{
-          'content-type':'multipart/form-data' 
+          'content-type':'multipart/form-data'
         }
       }).then((response) => {
         console.log("Imagen de usuario agregada");

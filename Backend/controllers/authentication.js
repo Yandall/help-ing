@@ -108,7 +108,8 @@ let validate_user = (req, res) => {
                     nickname: answer.nickname,
                     email: answer.email,
                     range: answer.range,
-                    _id: answer._id
+                    _id: answer._id,
+                    token : token
 
                 });
             } else {
