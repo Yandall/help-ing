@@ -86,7 +86,7 @@
 
           <h2>{{item.title}}</h2>
           <b-card
-            :img-src="'posts/' + item.file"
+            :img-src="item.file"
             img-alt=""
             tag="article"
             img-top

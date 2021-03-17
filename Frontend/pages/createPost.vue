@@ -41,7 +41,25 @@
             placeholder="Choose an image or PDF"
             drop-placeholder="Drop file here..."
           ></b-form-file>
+          <b-button variant="primary" @click="subirImagen()" >upload file</b-button>
         </b-form-group>
+
+        <div class="mx-auto" style="width: 300px;">
+              <b-card
+                id="card-img"
+                title="post Image"
+                img-alt="Image"
+                img-top
+                tag="article"
+                style="max-width: 20rem;"
+                class="mb-2"
+              >
+              <b-card-body>
+                <b-img id="image" src="" fluid alt="Imagen" variant="success"></b-img> 
+               <b-progress :value="progress_bar" :max="100" show-progress animated variant="danger"  ></b-progress>
+              </b-card-body>
+              </b-card>
+            </div>
 
         <b-button type="submit" variant="primary">Submit</b-button>
       </b-form>
@@ -53,17 +71,21 @@
 <script>
 import Axios from "axios";
 import config from "../assets/config"
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/helping-developer/image/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
+
   export default {
     data() {
       var date = Date.now()
       return {
-        file: [],
+        file: '',
         form: {
           body: '',
           author: '',
           post_date: date
         },
-        show: true
+        show: true,
+        progress_bar: 0
       }
     },
     computed: {
@@ -71,17 +93,21 @@ import config from "../assets/config"
         return this.file.name
       }
     },
+
+    mounted() {
+      alert("Para subir archivo en el post, se debe dar click primero en el boton 'upload file' ")
+    },
+
     methods: {
       onSubmit(evt) {
         evt.preventDefault()
-
-        this.savePost(this.file)
+        this.savePost()
         this.clearInputs()
       },
-      async savePost(file) {
+      async savePost() {
         try{
           var formData = new FormData()
-          formData.append('file', file)
+          formData.append('file', this.file)
           formData.append('title', this.form.title)
           formData.append('body', this.form.body)
           formData.append('tags', this.form.tags)
@@ -101,12 +127,40 @@ import config from "../assets/config"
         this.form.body = ''
         this.form.tags = ''
         this.form.file = ''
+        this.file = ''
       },
       cargarPerfil() {
         this.nickname = localStorage.getItem("nickname")
         this.email = localStorage.getItem("email")
         this.image = localStorage.getItem("image")
-      }
+      },
+      subirImagen() {
+      const IMG = document.getElementById('image');
+      const formData = new FormData();
+
+      formData.append('file', this.file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      Axios.post(CLOUDINARY_URL, formData, {
+        headers:{
+          'content-type':'multipart/form-data' 
+        },
+        onUploadProgress(e){
+          //this.progress = Math.round(e.loaded * 100)/e.total;
+          console.log(this.progress);
+        }
+      }).then((response) => {
+        console.log("Imagen agregada");
+        console.log(response);
+        this.file = response.data.secure_url;
+        console.log("File: " + this.file)
+        IMG.src = response.data.secure_url;
+      })
+      .catch((error) =>{
+        console.log("Hubo un error");
+        console.log(error);
+      })
+    }
     }
   }
 </script>

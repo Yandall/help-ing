@@ -92,7 +92,7 @@ async function saveFile(req, res) {
             tags: req.body.tags.split(','),
             author: req.body.author,
             post_date: req.body.post_date,
-            file: fileName,
+            file: req.body.file,
             likes : []
         }
         console.log(post.post_date)
