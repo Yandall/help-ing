@@ -180,7 +180,6 @@ export default {
   methods: {
     cargarPagina() {
       let url = config.url_api + "/login/verify";
-      console.log("url" + url)
       let token = localStorage.getItem("token");
       this.token = token;
       Axios
@@ -197,6 +196,7 @@ export default {
     },
     searchPost() {
       this.isSearching = true
+      console.log(`${this.url}/post/${this.typeSearch}/${this.search}`)
       Axios.get(`${this.url}/post/${this.typeSearch}/${this.search}`)
         .then(res => {
           let data = res.data;
@@ -212,7 +212,7 @@ export default {
     },
     loadPosts(index) {
       index = index || 1;
-      Axios.get(this.url + "/" + index, {
+      Axios.get(this.url + "/post/" + index, {
         headers: {
           "Cache-Control": "no-cache",
           Pragma: "no-cache",
@@ -235,7 +235,6 @@ export default {
     },
     updateLike(post, isOldLike) {
       let payload = {id_post: post._id, id_user: this.user_id}
-      console.log(post)
       Axios.post(this.url + "/updateLikes", payload)
       .then(res => {
         if (isOldLike) {
