@@ -11,6 +11,7 @@
         <b-button
           variant="light"
           size="sm"
+
           style="margin-inline: 5px"
           :to="{ name: 'createUC' }"
         >Crear Contenido Universal
