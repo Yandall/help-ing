@@ -16,6 +16,7 @@ const users = require('./routes/users')
 const uc = require(('./routes/universalContent'))
 const types = require('./routes/types')
 const authentication = require('./routes/authentication')
+const topics = require('./routes/topics')
 
 //Se usan los endpoints
 app.use('/post', posts)
@@ -23,6 +24,7 @@ app.use('/users', users)
 app.use('/uc', uc)
 app.use('/types', types)
 app.use('/login', authentication)
+app.use('/topics', topics)
 
 //Se asigna el puerto a la aplicación
 const port = process.env.PORT
