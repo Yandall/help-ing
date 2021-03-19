@@ -25,9 +25,10 @@ async function createUser(data) {
  * @param {*} req petición enviada desde el front
  * @param {*} res contiene la respuesta de la petición http 
  */
-async function saveUser(req, res) {
-     //console.log(req.body);
+async function createUser(req, res) {
+    const connection = await db.getConnection()
     try {
+        console.log(req.body)
         let user = {
             nickname: req.body.nickname,
             password: req.body.password,
@@ -35,17 +36,23 @@ async function saveUser(req, res) {
             range: parseInt(req.body.range),
             image: req.body.file
         }
-        await createUser(user)
+        console.log(user)
+        let dbo = connection.db('helping')
+        await dbo.collection('users').insertOne(user)
         res.status(200).send('Usuario creado')
     } catch(e) {
-        res.status(500).send("Erorr, usuario ya existente")
+        res.status(500).send("Erorr al crear usuario")
         console.error("Error al crear")
         console.log(e)
+    } finally {
+        if (connection.isConnected())
+            await connection.close()
     }
+    
 
 }
 
 //se eportan los métodos y funciones para poder utilizarlos luego
 module.exports = {
-    saveUser
+    createUser
 }

@@ -109,6 +109,7 @@ let validate_user = (req, res) => {
                     email: answer.email,
                     range: answer.range,
                     _id: answer._id,
+                    image: answer.image,
                     token : token
 
                 });

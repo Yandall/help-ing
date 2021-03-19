@@ -224,7 +224,7 @@ export default {
               localStorage.setItem("id", data._id)
               localStorage.setItem("token", data.token)
               if (data.image) {
-                localStorage.setItem("image", "users/" + data.image);
+                localStorage.setItem("image", data.image);
               } else {
                 localStorage.setItem(
                   "image",
@@ -245,40 +245,40 @@ export default {
             console.log(error.response);
           });
       } else {
-        alert("LLene todos los campos correctamente");
+        alert("LLene todos los campos correctamente")
       }
     },
     async crearCuenta(file) {
-      console.log(file);
+      console.log(file)
       try {
-        var formData = new FormData();
+        var user = {}
         if (file) {
           if (file.length == 0) {
-            alert("Se debe seleccionar una imagen");
-            return;
+            alert("Se debe seleccionar una imagen")
+            return
           } else {
-            formData.append("file", file);
+            user.file = file;
           }
         } else {
-          alert("Se debe seleccionar una imagen");
-          return;
+          alert("Se debe seleccionar una imagen")
+          return
         }
 
         if(this.tempUser.clave == ""){
-          alert("Todos los campo son obligatorios");
-          return;
+          alert("Todos los campo son obligatorios")
+          return
         }else {
-          formData.append("password", md5(this.tempUser.clave));
+          user.password = md5(this.tempUser.clave)
         }
 
-        formData.append("nickname", this.tempUser.nickname);
-        formData.append("email", this.tempUser.email);
+        user.nickname = this.tempUser.nickname
+        user.email = this.tempUser.email
 
-        formData.append("range", this.tempUser.range);
-        const url = "http://localhost:8080/users/saveUser";
-        const res = await Axios.post(url, formData);
-        alert(res.data);
-        this.clearInputs();
+        user.range = this.tempUser.range
+        const url = "http://localhost:8080/users/createUser"
+        const res = await Axios.post(url, user)
+        alert(res.data)
+        this.clearInputs()
       } catch (e) {
         alert("Error al crear el usuario")
         console.error(e);
