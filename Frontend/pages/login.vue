@@ -216,9 +216,7 @@ export default {
         Axios.post(url, payload)
           .then(response => {
             let user = this.user
-            console.log("User", user)
             let data = response.data
-            console.log("Data:", data)
             if (data.ok) {
               localStorage.setItem("nickname", data.nickname)
               localStorage.setItem("email", data.email)

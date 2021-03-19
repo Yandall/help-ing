@@ -72,8 +72,8 @@
       </b-collapse>
     </b-navbar>
 
-    <b-modal id="modal-1" title="Perfil" >
-      <img :src="image" height="100" width="100" style="margin: 10px" />
+    <b-modal id="modal-1" title="Perfil">
+      <img :src="image" height="100" width="100" style="margin: 10px"/>
       <p class="my-4">Nombre de usuario: {{ nickname }}</p>
       <p class="my-4">Correo electronico: {{ email }}</p>
     </b-modal>
@@ -94,7 +94,7 @@
           style="border: none"
         >
 
-          <h2>{{item.title}}</h2>
+          <h2>{{ item.title }}</h2>
           <b-card
             :img-src="item.file"
             img-alt=""
@@ -113,20 +113,21 @@
             <template #footer>
               <div class="post-footer">
                 <div v-if="!item.likes.includes(user_id)">
-                  <b-button size="sm" variant="secondary" class="mb-2 like-button-no-vote" @click="updateLike(item, false)">
+                  <b-button size="sm" variant="secondary" class="mb-2 like-button-no-vote"
+                            @click="updateLike(item, false)">
                     <b-icon icon="heart-fill" aria-label="Help"></b-icon>
-                    <p>{{item.nlikes}}</p>
+                    <p>{{ item.nlikes }}</p>
                   </b-button>
                 </div>
                 <div v-else>
                   <b-button size="sm" variant="secondary" class="mb-2 like-button-vote" @click="updateLike(item, true)">
                     <b-icon icon="heart-fill" aria-label="Help"></b-icon>
-                    <p>{{item.nlikes}}</p>
+                    <p>{{ item.nlikes }}</p>
                   </b-button>
                 </div>
 
                 <div class="post-footer-info">
-                  {{item.author}}  {{item.post_date}}
+                  {{ item.author }} {{ item.post_date }}
                 </div>
               </div>
 
@@ -158,6 +159,7 @@ export default {
     this.cargarPagina()
     this.loadPosts(new URLSearchParams(location.search).get("page"));
     this.cargarPerfil();
+
 
   },
   data() {
@@ -199,8 +201,9 @@ export default {
       let token = localStorage.getItem("token");
       this.token = token;
       Axios
-        .get(url, { headers: { token: token } })
-        .then((response) => { })
+        .get(url, {headers: {token: token}})
+        .then((response) => {
+        })
         .catch((error) => {
           console.log(error);
           this.$router.push("/login");
@@ -219,7 +222,7 @@ export default {
           data.forEach(item => {
             item.post_date = item.post_date.substring(0, 10);
           });
-          console.log(data)
+
           this.post_list = data;
         })
         .catch(e => {
@@ -239,7 +242,7 @@ export default {
           let data = res.data.values;
           data.forEach(item => {
             item.post_date = item.post_date.substring(0, 10);
-            item.nlikes = (item.likes === "")? item.likes.length - 1: item.likes.length
+            item.nlikes = (item.likes === "") ? item.likes.length - 1 : item.likes.length
           });
 
           this.post_list = data;
@@ -284,11 +287,14 @@ export default {
         this.email = localStorage.getItem("email");
         this.image = localStorage.getItem("image");
         this.user_id = localStorage.getItem("id");
-        if (localStorage.getItem("range") == 1) {
+        console.log("range",localStorage.getItem("range"))
+        if (localStorage.getItem("range") == null) {
           this.mod = false
         } else {
-          this.mod = true
+          this.mod = localStorage.getItem("range") != 1;
         }
+        localStorage.removeItem("range")
+        console.log("Range later", localStorage.getItem("range"))
       }
     },
     linkGen(pageNum) {
@@ -328,7 +334,7 @@ export default {
   background-color: #A00001;
 }
 
-.post-footer{
+.post-footer {
   height: inherit;
   width: inherit;
   display: flex;
@@ -337,10 +343,10 @@ export default {
   justify-content: space-between;
 }
 
-.like-button-no-vote{
+.like-button-no-vote {
   margin-right: 15px;
   margin-top: 0.5rem;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   color: darkgrey;
   border-color: darkgrey;
   border-radius: 1rem;
@@ -348,12 +354,12 @@ export default {
   flex-direction: row;
 }
 
-.like-button-no-vote p{
+.like-button-no-vote p {
   margin-bottom: 0;
   margin-left: 0.3rem;
 }
 
-.like-button-no-vote:hover{
+.like-button-no-vote:hover {
   margin-right: 15px;
   margin-top: 0.5rem;
   background-color: #A00001;
@@ -361,7 +367,7 @@ export default {
   border-color: #A00001;
 }
 
-.like-button-vote{
+.like-button-vote {
   margin-right: 15px;
   margin-top: 0.5rem;
   background-color: #A00001;
@@ -372,20 +378,20 @@ export default {
   flex-direction: row;
 }
 
-.like-button-vote p{
+.like-button-vote p {
   margin-bottom: 0;
   margin-left: 0.3rem;
 }
 
-.like-button-vote:hover{
+.like-button-vote:hover {
   margin-right: 15px;
   margin-top: 0.5rem;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   color: darkgrey;
   border-color: darkgrey;
 }
 
-.post-footer-info{
+.post-footer-info {
   color: darkgrey;
 }
 
