@@ -5,8 +5,18 @@
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
+
+
       <b-collapse id="nav-collapse" is-nav>
+
         <b-navbar-nav>
+          <b-nav-item-dropdown text="Temas" class="topicsDropDown">
+            <b-dropdown-item v-for="(topic, index) in topics" :key="index" @click="changeTopic(topic)">{{topic}}</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+        
+        <b-navbar-nav>
+          
           <b-button
             variant="light"
             size="sm"
@@ -97,7 +107,8 @@
             <b-card-text>
 
               {{ item.body }}
-              <br>Tags: <b-badge pill variant="secondary" v-for="tag in item.tags"  style="margin-right: 5px">{{tag}}</b-badge>
+
+                <br>Tags: <b-badge pill variant="secondary" v-for="(tag, index) in item.tags" :key="index" style="margin-right: 5px">{{tag}}</b-badge>
             </b-card-text>
             <template #footer>
               <div class="post-footer">
@@ -157,6 +168,11 @@ export default {
       email: "",
       image: "",
       user_id: "",
+      topics:{
+        0: 'Base de datos',
+        1: 'Fundamentos',
+        2: 'Integrales'
+      },
       fields: [
         {
           key: "title",
@@ -168,8 +184,8 @@ export default {
           label: "Body"
         }
       ],
-      numberPages: 3,
-      perPage: 5,
+      numberPages: 1,
+      perPage: 10,
       typeSearch: 'title',
       search: '',
       mod: false,
@@ -235,7 +251,7 @@ export default {
     },
     updateLike(post, isOldLike) {
       let payload = {id_post: post._id, id_user: this.user_id}
-      Axios.post(this.url + "/updateLikes", payload)
+      Axios.post(this.url + "/post/updateLikes", payload)
       .then(res => {
         if (isOldLike) {
           post.nlikes --
@@ -248,6 +264,10 @@ export default {
       }).catch(e => {
         console.log(e)
       })
+    },
+    changeTopic(topic) {
+      topic = topic.replace(/\s/g, "")
+      this.$router.push({path: `/${topic}`})
     },
     logOut() {
       this.$router.push("/login");
@@ -367,6 +387,10 @@ export default {
 
 .post-footer-info{
   color: darkgrey;
+}
+
+.topicsDropDown a span{
+  color: white;
 }
 
 </style>

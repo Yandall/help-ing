@@ -13,7 +13,7 @@ async function getPosts(req,res) {
     const connection = await db.getConnection()
     try {
         let pageNumber = req.params.page
-        let nPerPage = 5
+        let nPerPage = 10
         let dbo = connection.db('helping')
         let cursor = dbo.collection('posts').find({}).sort({'post_date': -1})
             .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
@@ -28,7 +28,6 @@ async function getPosts(req,res) {
     } finally {
         if (connection.isConnected())
             await connection.close()
-
     }
 }
 
