@@ -106,6 +106,8 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
       },
       async savePost() {
         try{
+          if(!this.form.tags) this.form.tags = ''
+
           var formData = new FormData()
           formData.append('file', this.file)
           formData.append('title', this.form.title)
