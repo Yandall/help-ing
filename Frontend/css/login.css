@@ -34,22 +34,16 @@
 
 }
 
-hi {
-  color: white;
-}
 body {
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-.img{
-  height:450px;
-}
 
 
 .col{
   margin-top: 50px;
-  padding-right: 50px;
+  padding-right: 30px;
   height: 700px;
 }
 

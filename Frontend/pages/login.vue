@@ -4,12 +4,11 @@
 
     <b-container >
       <b-row>
-        <b-col align-self="center">
-          <div class="container_login">
-            <div class="tittle">HELP ING</div>
-          </div>
+        <b-col >
 
-          <b-img src="https://previews.123rf.com/images/quartadis/quartadis1705/quartadis170500156/78960794-ingeniero-mantiene-en-sus-manos-el-dibujo-con-el-plan-de-construcci%C3%B3n-habla-en-smartphone-con-un-equipo.jpg" height="450px"></b-img>
+
+
+          <b-img src="../static/logo_login.png" height="200" width="400" ></b-img>
         </b-col>
         <b-col align-self="center">
           <b-form action="javascript:void(0)">

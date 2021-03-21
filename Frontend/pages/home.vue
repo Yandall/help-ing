@@ -14,9 +14,9 @@
             <b-dropdown-item v-for="(topic, index) in topics" :key="index" @click="changeTopic(topic)">{{topic}}</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
-        
+
         <b-navbar-nav>
-          
+
           <b-button
             variant="light"
             size="sm"
@@ -110,7 +110,11 @@
 
                 <br>Tags: <b-badge pill variant="secondary" v-for="(tag, index) in item.tags" :key="index" style="margin-right: 5px">{{tag}}</b-badge>
             </b-card-text>
+            <div class="link_file">
+            <b-link  v-if="checkPDFFormat(item.file)" :href="item.file" >{{item.file}}</b-link>
+            </div>
             <template #footer>
+
               <div class="post-footer">
                 <div v-if="!item.likes.includes(user_id)">
                   <b-button size="sm" variant="secondary" class="mb-2 like-button-no-vote"
@@ -153,6 +157,7 @@
 <script>
 import Axios from "axios";
 import config from "../assets/config";
+import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 
 export default {
   beforeMount() {
@@ -297,8 +302,16 @@ export default {
         console.log("Range later", localStorage.getItem("range"))
       }
     },
+
     linkGen(pageNum) {
       return pageNum === 1 ? "?" : `?page=${pageNum}`;
+    },
+
+    checkPDFFormat(url){
+      const regex = /.pdf/;
+      return (".pdf" == url.match(regex));
+
+
     },
   }
 };
