@@ -195,10 +195,10 @@ export default {
       evt.preventDefault();
       this.uploadImage(this.file);
     },
-    
+
     /**
      *Método para validar si el usuario que esta accediendo al login ya esta logueado, si esta logueado lo redirige al home
-     *sino lo esta, carga la pagina del login 
+     *sino lo esta, carga la pagina del login
      */
     loadPage() {
       if (localStorage.getItem("nickname") == ""){
@@ -249,6 +249,7 @@ export default {
             }
           })
           .catch(error => {
+            alert("Asegurese de que todos los campos esten correctos");
             this.mensaje2 = error.response.data.message;
             console.log(error.response);
           });
@@ -258,7 +259,7 @@ export default {
     },
 
     /**
-     * Método para crear un nuevo usuario en la palicación y guardarla enviando una petición(post) al backend con las respectivas 
+     * Método para crear un nuevo usuario en la palicación y guardarla enviando una petición(post) al backend con las respectivas
      * validaciones
      */
     async createAccount(file) {
@@ -351,7 +352,7 @@ export default {
     ocultar_modal_clave() {
       this.$refs["my-modal-pass"].hide();
     },
-    
+
 
     validar() {
       const valid = this.$refs.form.checkValidity();
