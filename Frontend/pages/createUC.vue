@@ -137,6 +137,9 @@ export default {
 
     data() {
         return {
+          /**
+           * Se inicializan las variables para luego usarlas
+           */
             uc: {
                 title: "",
                 author: "",
@@ -166,7 +169,9 @@ export default {
 
     methods: {
 
-
+        /**
+         * Método para cargar los tipos de publicaciones mediante una peticion(get) al backend
+         */
         loadTpyes(){
 
             axios.get(config.url_api + "/types")
@@ -184,7 +189,10 @@ export default {
 
         },
 
-
+        /**
+         * Método para capturar la información del form despues se envia al backend mediante una petición(post)
+         * y así crear un nuevo contenido universal
+         */
        async createUC() {
              try {
                 var formData = new FormData();
@@ -201,8 +209,6 @@ export default {
             } catch (e) {
                 console.error(e);
             }
-
-
     }
 
     }

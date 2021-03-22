@@ -22,7 +22,7 @@
                 <br />
 
                 <b-form-group @submit.stop.prevent >
-                  <b-form-invalid-feedback :state="validar_email">*</b-form-invalid-feedback>
+                  <b-form-invalid-feedback :state="validate_email">*</b-form-invalid-feedback>
                   <b-input-group size="sm" class="mb-2">
                     <b-input-group-prepend is-text>
                       <b-icon icon="envelope"></b-icon>
@@ -41,7 +41,7 @@
                 </b-form-group>
 
                 <b-form-group @submit.stop.prevent >
-                  <b-form-invalid-feedback :state="validar_password">*</b-form-invalid-feedback>
+                  <b-form-invalid-feedback :state="validate_password">*</b-form-invalid-feedback>
                   <b-input-group size="sm" class="mb-2">
                     <b-input-group-prepend is-text>
                       <b-icon icon="shield-lock"></b-icon>
@@ -127,10 +127,10 @@
                     placeholder="Choose an image"
                     drop-placeholder="Drop file here..."
                   ></b-form-file>
-                  <b-button @click="subirImagen()" variant="outline-danger">Subir imagen</b-button>
+                  <b-button @click="uploadImage()" variant="outline-danger">Subir imagen</b-button>
                 </b-form-group>
               </form>
-              <b-button @click="crearCuenta(file)" variant="outline-danger">Crear cuenta</b-button>
+              <b-button @click="createAccount(file)" variant="outline-danger">Crear cuenta</b-button>
             </b-modal>
           </b-form>
 
@@ -154,11 +154,12 @@ const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/helping-developer/image/
 const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
 export default {
   beforeMount() {
-
-    this.carga_pagina();
+    this.loadPage();
   },
+
   data() {
     return {
+      //Se inicializan variables
       estado_nombre: null,
       estado_correo: null,
       estado_clave: null,
@@ -178,24 +179,31 @@ export default {
     };
   },
 
+  /**
+   * Se validan que el usuario llene todos los campos necesarios para loguearse
+   */
   computed: {
     fileName() {
       return this.file.name;
-    },validar_email() {
+    },validate_email() {
       return this.usuario.email.length > 0;
     },
 
-    validar_password() {
+    validate_password() {
       return this.usuario.password.length > 0;
     }
   },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.crearCuenta(this.file);
+      this.createAccount(this.file);
     },
-
-    carga_pagina() {
+    
+    /**
+     *Método para validar si el usuario que esta accediendo al login ya esta logueado, si esta logueado lo redirige al home
+     *sino lo esta, carga la pagina del login 
+     */
+    loadPage() {
       if (localStorage.getItem("nickname") == ""){
         this.$router.push("/login");
       } else{
@@ -204,6 +212,10 @@ export default {
       let url = "http://localhost:8080/";
       this.url = url;
     },
+    /**
+     * Método para loguear a un usuario en la aplicacíon validando mediante una petición al backend que los datos que ingresa
+     * el usuario correspondan a los registrados cuando creó su cuenta
+     */
     login() {
       let url =
         "http://localhost:8080/login"
@@ -247,7 +259,12 @@ export default {
         alert("LLene todos los campos correctamente")
       }
     },
-    async crearCuenta(file) {
+
+    /**
+     * Método para crear un nuevo usuario en la palicación y guardarla enviando una petición(post) al backend con las respectivas 
+     * validaciones
+     */
+    async createAccount(file) {
       console.log(file)
       try {
         var user = {}
@@ -285,9 +302,9 @@ export default {
     },
 
     /**
-       * Se sube el archivo a cloudinary, y se obtiene el link que queda asociado al post
+       *Método para subir el archivo a cloudinary, y se obtiene el link que queda asociado al post
        */
-      subirImagen() {
+      uploadImage() {
       const IMG = document.getElementById('file');
       const formData = new FormData();
 
@@ -311,6 +328,9 @@ export default {
       })
       },
 
+    /**
+     * Método para limpiar los campos del form
+     */
     clearInputs() {
       this.tempUser.nickname = "";
       this.tempUser.clave = "";
@@ -325,6 +345,7 @@ export default {
     mostrar_modal_clave() {
       this.$refs["my-modal-pass"].show();
     },
+
     ocultar_modal() {
       this.$refs["my-modal"].hide();
     },
@@ -332,6 +353,7 @@ export default {
     ocultar_modal_clave() {
       this.$refs["my-modal-pass"].hide();
     },
+    
 
     validar() {
       const valid = this.$refs.form.checkValidity();
@@ -339,12 +361,14 @@ export default {
       this.estado_correo = valid;
       return valid;
     },
+
     validar_pass() {
       const valid = this.$refs.form.checkValidity();
       this.estado_correo = valid;
       this.estado_clave = valid;
       return valid;
     },
+
     vaciar_modal() {
       this.usuario.id = "";
       this.estado_id = null;
@@ -353,6 +377,7 @@ export default {
       this.estado_clave = null;
       this.estado_id = null;
     },
+
     generar_clave() {
       let r = Math.random()
         .toString(36)

@@ -161,14 +161,15 @@ import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 
 export default {
   beforeMount() {
-    this.cargarPagina()
+    //se hace un llamado a los métodos recien se carga la pagina, para mostrar la información 
+    this.loadPage()
     this.loadPosts(new URLSearchParams(location.search).get("page"));
-    this.cargarPerfil();
-
-
+    this.loadProfile();
   },
+
   data() {
     return {
+      //se inicializan variables 
       post_list: null,
       url: `${config.url_api}`,
       nickname: "",
@@ -201,7 +202,10 @@ export default {
   },
 
   methods: {
-    cargarPagina() {
+    /**
+     * Método para validar que el token que esta en el local storage si sea un token valido
+     */
+    loadPage() {
       let url = config.url_api + "/login/verify";
       let token = localStorage.getItem("token");
       this.token = token;
@@ -218,6 +222,10 @@ export default {
           localStorage.setItem("id", "")
         });
     },
+
+    /**
+     * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend 
+     */
     searchPost() {
       this.isSearching = true
       console.log(`${this.url}/post/${this.typeSearch}/${this.search}`)
@@ -234,6 +242,10 @@ export default {
           console.log(e);
         });
     },
+
+    /**
+     * Método para cargar todos los Post que estan creados, enviando una petición(get) al backend, y luegos mostrarlos 
+     */
     loadPosts(index) {
       index = index || 1;
       Axios.get(this.url + "/post/" + index, {
@@ -257,6 +269,9 @@ export default {
           console.log(e);
         });
     },
+    /**
+     * Método para enviar el like que le da el usuario a la publicación mediante una peticion(post) al backend
+     */
     updateLike(post, isOldLike) {
       let payload = {id_post: post._id, id_user: this.user_id}
       Axios.post(this.url + "/post/updateLikes", payload)
@@ -273,17 +288,29 @@ export default {
         console.log(e)
       })
     },
+
+    /**
+     * Método para agregarle a la url el elemento(tema) que se haya elegido para buscarlo en el backend y filtrar las publicaciones
+     */
     changeTopic(topic) {
       topic = topic.replace(/\s/g, "")
       this.$router.push({path: `/${topic}`})
     },
+
+    /**
+     * Método para cerrar la sesión del usuario 
+     */
     logOut() {
       this.$router.push("/login");
       localStorage.setItem("nickname", "");
       localStorage.setItem("email", "");
       localStorage.setItem("image", "");
     },
-    cargarPerfil() {
+
+    /**
+     * Método para cargar los datos al localStorage de la persona que esta logueada en la aplicación
+     */
+    loadProfile() {
       if (localStorage.getItem("nickname") == "" || localStorage.getItem("email") == "") {
         this.$router.push("/login")
 
@@ -303,14 +330,19 @@ export default {
       }
     },
 
+    /**
+     * Método para general el link, cada que se cambia la pagina para ver las publicaciones
+     */
     linkGen(pageNum) {
       return pageNum === 1 ? "?" : `?page=${pageNum}`;
     },
 
+    /**
+     * Método para chequear el formato del pdf 
+     */
     checkPDFFormat(url){
       const regex = /.pdf/;
       return (".pdf" == url.match(regex));
-
 
     },
   }

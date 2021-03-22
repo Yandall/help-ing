@@ -107,6 +107,7 @@ export default {
     beforeMount() {},
 
     data() {
+      //Se inicializan variables
         return {
             universalContents: [],
             url: `${config.url_api}/uc`,
@@ -127,6 +128,10 @@ export default {
     computed: {},
 
     methods: {
+      /**
+       * Método para traer todos los registros de CU mediante una petición(get) al backend 
+       * y luego mostrarlos en la pagina para que el usuario los vea
+       */
         loadUC() {
             console.log(config.url_api + "/uc")
             axios.get(config.url_api + "/uc")
@@ -150,6 +155,9 @@ export default {
             .catch(err => console.log(err))
         },
 
+      /**
+       * Método para cerrar la sesión del usuario que esta logueado
+       */
       logOut() {
         this.$router.push("/login");
         localStorage.setItem("nickname", "");

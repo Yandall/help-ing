@@ -41,7 +41,7 @@
             placeholder="Choose an image or PDF"
             drop-placeholder="Drop file here..."
           ></b-form-file>
-          <b-button variant="primary" @click="subirImagen()" >upload file</b-button>
+          <b-button variant="primary" @click="uploadImage()" >upload file</b-button>
         </b-form-group>
 
         <div class="mx-auto" style="width: 300px;">
@@ -104,6 +104,10 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
         this.savePost()
         this.clearInputs()
       },
+      /**
+       * Método para capturar la información del form, despues se envia al backend mediante una petición(post)
+       * y así crear un nuevo post
+       */
       async savePost() {
         try{
           if(!this.form.tags) this.form.tags = ''
@@ -124,6 +128,9 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
         }
 
       },
+      /**
+       * Método para limpiar los campos del form luego de capturarlos
+       */
       clearInputs(){
         this.form.title = ''
         this.form.body = ''
@@ -131,16 +138,19 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
         this.form.file = ''
         this.file = ''
       },
-      cargarPerfil() {
+      /**
+       * Método para cargar los datos al localStorage de la persona que se esta logueando en la aplicación 
+       */
+      uploadProfile() {
         this.nickname = localStorage.getItem("nickname")
         this.email = localStorage.getItem("email")
         this.image = localStorage.getItem("image")
       },
 
       /**
-       * Se sube el archivo a cloudinary, y se obtiene el link que queda asociado al post
+       * Método para subir  el archivo a cloudinary, y se obtiene el link que queda asociado al post
        */
-      subirImagen() {
+      uploadImage() {
       const IMG = document.getElementById('image');
       const formData = new FormData();
 
