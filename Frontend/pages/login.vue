@@ -127,14 +127,11 @@
                     placeholder="Choose an image"
                     drop-placeholder="Drop file here..."
                   ></b-form-file>
-                  <b-button @click="uploadImage()" variant="outline-danger">Subir imagen</b-button>
                 </b-form-group>
               </form>
-              <b-button @click="createAccount(file)" variant="outline-danger">Crear cuenta</b-button>
+              <b-button @click="uploadImage()" variant="outline-danger">Crear cuenta</b-button>
             </b-modal>
           </b-form>
-
-
           <br />
         </b-col>
 
@@ -196,7 +193,7 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.createAccount(this.file);
+      this.uploadImage(this.file);
     },
     
     /**
@@ -265,11 +262,11 @@ export default {
      * validaciones
      */
     async createAccount(file) {
-      console.log(file)
+      console.log("ARCHIVO:" + file)
       try {
         var user = {}
         if (file) {
-          if (file.length == 0) {
+          if (file == "") {
             alert("Se debe seleccionar una imagen")
             return
           } else {
@@ -319,8 +316,9 @@ export default {
         console.log("Imagen de usuario agregada");
         console.log(response);
         this.file = response.data.secure_url;
-        console.log("File: " + this.file)
+        console.log("Fileee: " + this.file)
         IMG.src = response.data.secure_url;
+        this.createAccount(this.file)
       })
       .catch((error) =>{
         console.log("Hubo un error");
