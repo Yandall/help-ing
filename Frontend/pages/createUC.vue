@@ -65,7 +65,7 @@
       align="left"
       title="Agregar contenido Universal"
     >
-      <b-form action="javascript:void(0)" @submit="createUC()">
+      <b-form action="javascript:void(0)" @submit="uploadImage()">
         <b-form-group label="Título:" label-for="title">
           <b-form-input
             id="title"
@@ -130,6 +130,8 @@ import Vue from "vue";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/helping-developer/image/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
 
 
 export default {
@@ -209,7 +211,39 @@ export default {
             } catch (e) {
                 console.error(e);
             }
-    }
+        },
+        /**
+       * Método para subir  el archivo a cloudinary, y se obtiene el link que queda asociado al post
+       */
+      uploadImage() {
+      const IMG = document.getElementById('file');
+      const formData = new FormData();
+
+      formData.append('file', this.uc.file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      axios.post(CLOUDINARY_URL, formData, {
+        headers:{
+          'content-type':'multipart/form-data' 
+        },
+        onUploadProgress(e){
+          //this.progress = Math.round(e.loaded * 100)/e.total;
+          //console.log(this.progress);
+        }
+      }).then((response) => {
+        console.log("Imagen agregada");
+        console.log(response);
+        this.uc.file = response.data.secure_url;
+        console.log("File: " + this.uc.file)
+        IMG.src = response.data.secure_url;
+        this.createUC()
+      })
+      .catch((error) =>{
+        console.log("Hubo un error");
+        console.log(error);
+      })
+      }
+
 
     }
 };
