@@ -41,7 +41,6 @@
             placeholder="Choose an image or PDF"
             drop-placeholder="Drop file here..."
           ></b-form-file>
-          <b-button variant="primary" @click="uploadImage()" >upload file</b-button>
         </b-form-group>
 
         <div class="mx-auto" style="width: 300px;">
@@ -101,7 +100,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
     methods: {
       onSubmit(evt) {
         evt.preventDefault()
-        this.savePost()
+        this.uploadImage()
         this.clearInputs()
       },
       /**
@@ -171,6 +170,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
         this.file = response.data.secure_url;
         console.log("File: " + this.file)
         IMG.src = response.data.secure_url;
+        this.savePost()
       })
       .catch((error) =>{
         console.log("Hubo un error");
