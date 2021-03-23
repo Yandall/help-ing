@@ -111,8 +111,11 @@
                 <br>Tags: <b-badge pill variant="secondary" v-for="(tag, index) in item.tags" :key="index" style="margin-right: 5px">{{tag}}</b-badge>
             </b-card-text>
             <div class="link_file">
-            <b-link  v-if="checkPDFFormat(item.file)" :href="item.file" >{{item.file}}</b-link>
+              <b-icon icon="file-earmark-arrow-down" v-if="checkPDFFormat(item.file)"></b-icon>
+              <b-link  v-if="checkPDFFormat(item.file)" :href="item.file" >{{item.file}}</b-link>
             </div>
+
+
             <template #footer>
 
               <div class="post-footer">
@@ -161,7 +164,7 @@ import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 
 export default {
   beforeMount() {
-    //se hace un llamado a los métodos recien se carga la pagina, para mostrar la información 
+    //se hace un llamado a los métodos recien se carga la pagina, para mostrar la información
     this.loadPage()
     this.loadPosts(new URLSearchParams(location.search).get("page"));
     this.loadProfile();
@@ -169,7 +172,7 @@ export default {
 
   data() {
     return {
-      //se inicializan variables 
+      //se inicializan variables
       post_list: null,
       url: `${config.url_api}`,
       nickname: "",
@@ -224,7 +227,7 @@ export default {
     },
 
     /**
-     * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend 
+     * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend
      */
     searchPost() {
       this.isSearching = true
@@ -244,7 +247,7 @@ export default {
     },
 
     /**
-     * Método para cargar todos los Post que estan creados, enviando una petición(get) al backend, y luegos mostrarlos 
+     * Método para cargar todos los Post que estan creados, enviando una petición(get) al backend, y luegos mostrarlos
      */
     loadPosts(index) {
       index = index || 1;
@@ -298,7 +301,7 @@ export default {
     },
 
     /**
-     * Método para cerrar la sesión del usuario 
+     * Método para cerrar la sesión del usuario
      */
     logOut() {
       this.$router.push("/login");
@@ -338,7 +341,7 @@ export default {
     },
 
     /**
-     * Método para chequear el formato del pdf 
+     * Método para chequear el formato del pdf
      */
     checkPDFFormat(url){
       const regex = /.pdf/;
@@ -443,7 +446,16 @@ export default {
 .topicsDropDown a span{
   color: white;
 }
+.link_file{
+  border-color: lightgrey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 0.2rem;
 
+
+}
 </style>
 
 

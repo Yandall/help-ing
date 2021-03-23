@@ -151,6 +151,8 @@ export default {
                 icon: ""
             },
 
+
+
             types: [],
           url: `${config.url_api}/uc`,
           typeSearch: 'title',
@@ -224,7 +226,7 @@ export default {
 
       axios.post(CLOUDINARY_URL, formData, {
         headers:{
-          'content-type':'multipart/form-data' 
+          'content-type':'multipart/form-data'
         },
         onUploadProgress(e){
           //this.progress = Math.round(e.loaded * 100)/e.total;
