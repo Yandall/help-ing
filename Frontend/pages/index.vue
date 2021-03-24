@@ -275,7 +275,7 @@ export default {
      * Método para general el link, cada que se cambia la pagina para ver las publicaciones
      */
     linkGen(pageNum) {
-      let querys = (this.$route.query.topic)? '?topic=' + this.$route.query.topic: ''
+      let querys = (this.$route.query.topic)? '?topic=' + this.$route.query.topic: '?'
       querys += pageNum === 1 ? "&" : `&page=${pageNum}`
       console.log(querys)
       return querys
@@ -298,7 +298,10 @@ export default {
     changeTopic(topic) {
       topic = topic.replace(/\s/g, "_")
       this.$router.push({path: '/', query: {'topic': topic}})
-      this.loadPosts(1)
+      setTimeout(() =>{
+        window.location.reload()
+      }, 10)
+      
     },
 
     /**
@@ -354,6 +357,9 @@ export default {
         });
     },
 
+    /**
+     * Carga la lista topics de los datos obtenidos del backend
+     */
     loadTopics() {
       Axios.get(this.url + "/topics")
       .then(res => {
