@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const topicController = require('../controllers/topics')
 
-router.get('/', topicController.getTheme)
+router.get('/', topicController.getTopic)
 
-router.post('/saveTheme', topicController.saveTheme)
+router.post('/saveTheme', topicController.saveTopic)
 
 module.exports = router;

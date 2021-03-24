@@ -158,16 +158,17 @@
 </template>
 
 <script>
-import Axios from "axios";
-import config from "../assets/config";
+import Axios from "axios"
+import config from "../assets/config"
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 
 export default {
   beforeMount() {
     //se hace un llamado a los métodos recien se carga la pagina, para mostrar la información
     this.loadPage()
-    this.loadPosts(new URLSearchParams(location.search).get("page"));
-    this.loadProfile();
+    this.loadPosts(new URLSearchParams(location.search).get("page"))
+    this.loadProfile()
+    this.loadTopics()
   },
 
   data() {
@@ -180,9 +181,6 @@ export default {
       image: "",
       user_id: "",
       topics:{
-        0: 'Base de datos',
-        1: 'Fundamentos',
-        2: 'Integrales'
       },
       fields: [
         {
@@ -223,26 +221,6 @@ export default {
           localStorage.setItem("email", "")
           localStorage.setItem("range", "")
           localStorage.setItem("id", "")
-        });
-    },
-
-    /**
-     * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend
-     */
-    searchPost() {
-      this.isSearching = true
-      console.log(`${this.url}/post/${this.typeSearch}/${this.search}`)
-      Axios.get(`${this.url}/post/${this.typeSearch}/${this.search}`)
-        .then(res => {
-          let data = res.data;
-          data.forEach(item => {
-            item.post_date = item.post_date.substring(0, 10);
-          });
-
-          this.post_list = data;
-        })
-        .catch(e => {
-          console.log(e);
         });
     },
 
@@ -293,6 +271,24 @@ export default {
     },
 
     /**
+     * Método para general el link, cada que se cambia la pagina para ver las publicaciones
+     */
+    linkGen(pageNum) {
+      return pageNum === 1 ? "?" : `?page=${pageNum}`;
+    },
+
+    /**
+     * Método para chequear el formato del pdf
+     */
+    checkPDFFormat(url){
+      const regex = /.pdf/;
+      return (".pdf" == url.match(regex));
+
+    },
+
+    //Metodos del navbar
+
+    /**
      * Método para agregarle a la url el elemento(tema) que se haya elegido para buscarlo en el backend y filtrar las publicaciones
      */
     changeTopic(topic) {
@@ -334,20 +330,36 @@ export default {
     },
 
     /**
-     * Método para general el link, cada que se cambia la pagina para ver las publicaciones
+     * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend
      */
-    linkGen(pageNum) {
-      return pageNum === 1 ? "?" : `?page=${pageNum}`;
+    searchPost() {
+      this.isSearching = true
+      console.log(`${this.url}/post/${this.typeSearch}/${this.search}`)
+      Axios.get(`${this.url}/post/${this.typeSearch}/${this.search}`)
+        .then(res => {
+          let data = res.data;
+          data.forEach(item => {
+            item.post_date = item.post_date.substring(0, 10);
+          });
+
+          this.post_list = data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
 
-    /**
-     * Método para chequear el formato del pdf
-     */
-    checkPDFFormat(url){
-      const regex = /.pdf/;
-      return (".pdf" == url.match(regex));
-
-    },
+    loadTopics() {
+      Axios.get(this.url + "/topics")
+      .then(res => {
+        let data = []
+        res.data.forEach(topic => {
+          data.push(topic.name)
+        })
+        this.topics = data
+      })
+    }
+    
   }
 };
 </script>

@@ -1,6 +1,6 @@
 const db = require('../services/mongoDB')
 
-async function getTheme(req, res) {
+async function getTopic(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db("helping")
@@ -19,7 +19,7 @@ async function getTheme(req, res) {
 }
 
 
-async function createTheme(data){
+async function createTopic(data){
     const connection = await db.getConnection()
     try{
         let dbo = connection.db('helping')
@@ -31,7 +31,7 @@ async function createTheme(data){
     }
 }
 
-async function saveTheme(req, res){
+async function saveTopic(req, res){
     try{
         let theme = {
             name: req.body.name
@@ -44,7 +44,7 @@ async function saveTheme(req, res){
 }
 
 module.exports ={
-    createTheme,
-    saveTheme,
-    getTheme
+    createTopic,
+    saveTopic,
+    getTopic
 }
