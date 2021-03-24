@@ -13,13 +13,15 @@ async function getPosts(req,res) {
     const connection = await db.getConnection()
     try {
         let pageNumber = req.params.page
+        let topic = req.params.topic
         let nPerPage = 10
         let dbo = connection.db('helping')
-        let cursor = dbo.collection('posts').find({}).sort({'post_date': -1})
-            .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
-            .limit(nPerPage)
+        let filter = topic!="home" ? {'topic':topic.replace('_', " ")} : {}
+        let cursor = dbo.collection('posts').find(filter).sort({'post_date': -1})
+                .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
+                .limit(nPerPage)
         let values = await cursor.toArray()
-        let cantPosts = await dbo.collection('posts').countDocuments({})
+        let cantPosts = await dbo.collection('posts').countDocuments(filter)
         console.log(values)
         res.status(200).send({values, cantPosts})
     } catch (e) {

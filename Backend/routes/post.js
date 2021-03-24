@@ -25,7 +25,7 @@ var upload = multer({ storage: storage,
     } })
 
 ////endpoint para obtener todas las publicaciones
-router.get('/:page', post_controller.getPosts)
+router.get('/:topic/:page', post_controller.getPosts)
 //endpoint para obtener solo las publicaciones filtradas
 router.get('/:type/:input', post_controller.searchPost)
 //endpoint para guardar la publicación 
