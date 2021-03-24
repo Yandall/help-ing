@@ -149,7 +149,7 @@
           :link-gen="linkGen"
           :number-of-pages="numberPages"
           use-router
-          @change="loadPosts($event)"
+          @change="loadPosts"
           align="center"
         ></b-pagination-nav>
       </div>
@@ -227,8 +227,8 @@ export default {
     /**
      * Método para cargar todos los Post que estan creados, enviando una petición(get) al backend, y luegos mostrarlos
      */
-    loadPosts(index) {
-      index = index || 1;
+    loadPosts() {
+      let index = (this.$route.query.page)? this.$route.query.page: 1
       let topic = (this.$route.query.topic)? this.$route.query.topic: 'home' 
       Axios.get(`${this.url}/post/${topic}/${index}`, {
         headers: {
@@ -275,7 +275,10 @@ export default {
      * Método para general el link, cada que se cambia la pagina para ver las publicaciones
      */
     linkGen(pageNum) {
-      return pageNum === 1 ? "?" : `?page=${pageNum}`;
+      let querys = (this.$route.query.topic)? '?topic=' + this.$route.query.topic: ''
+      querys += pageNum === 1 ? "&" : `&page=${pageNum}`
+      console.log(querys)
+      return querys
     },
 
     /**
