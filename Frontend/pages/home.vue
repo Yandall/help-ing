@@ -165,8 +165,8 @@ import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 export default {
   beforeMount() {
     //se hace un llamado a los métodos recien se carga la pagina, para mostrar la información
-    this.loadPage()
     this.loadPosts(new URLSearchParams(location.search).get("page"))
+    this.verifyToken()
     this.loadProfile()
     this.loadTopics()
   },
@@ -206,7 +206,7 @@ export default {
     /**
      * Método para validar que el token que esta en el local storage si sea un token valido
      */
-    loadPage() {
+    verifyToken() {
       let url = config.url_api + "/login/verify";
       let token = localStorage.getItem("token");
       this.token = token;
@@ -293,7 +293,7 @@ export default {
      */
     changeTopic(topic) {
       topic = topic.replace(/\s/g, "")
-      this.$router.push({path: `/${topic}`})
+      this.$router.push({path: '/', query: {'topic': topic}})
     },
 
     /**
