@@ -6,12 +6,12 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
 
-
       <b-collapse id="nav-collapse" is-nav>
 
         <b-navbar-nav>
           <b-nav-item-dropdown text="Temas" class="topicsDropDown">
-            <b-dropdown-item v-for="(topic, index) in topics" :key="index" @click="changeTopic(topic)">{{topic}}</b-dropdown-item>
+            <b-dropdown-item v-for="(topic, index) in topics" :key="index" @click="changeTopic(topic)">{{ topic }}
+            </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
@@ -108,11 +108,14 @@
 
               {{ item.body }}
 
-                <br>Tags: <b-badge pill variant="secondary" v-for="(tag, index) in item.tags" :key="index" style="margin-right: 5px">{{tag}}</b-badge>
+              <br>Tags:
+              <b-badge pill variant="secondary" v-for="(tag, index) in item.tags" :key="index"
+                       style="margin-right: 5px">{{ tag }}
+              </b-badge>
             </b-card-text>
             <div class="link_file">
               <b-icon icon="file-earmark-arrow-down" v-if="checkPDFFormat(item.file)"></b-icon>
-              <b-link  v-if="checkPDFFormat(item.file)" :href="item.file" >{{item.file}}</b-link>
+              <b-link v-if="checkPDFFormat(item.file)" :href="item.file">{{ item.file }}</b-link>
             </div>
 
 
@@ -180,8 +183,8 @@ export default {
       email: "",
       image: "",
       user_id: "",
-      topics:{
-      },
+      topics: {},
+      token : "",
       fields: [
         {
           key: "title",
@@ -207,20 +210,18 @@ export default {
      * Método para validar que el token que esta en el local storage si sea un token valido
      */
     verifyToken() {
+      let token = document.cookie.split(";").toString().split("token=")[1]
+      let image = document.cookie.split(";").toString().split("token=")[0]
       let url = config.url_api + "/login/verify";
-      let token = localStorage.getItem("token");
       this.token = token;
+      this.image = image;
       Axios
         .get(url, {headers: {token: token}})
         .then((response) => {
+          return true
         })
         .catch((error) => {
-          console.log(error);
           this.$router.push("/login");
-          localStorage.setItem("nickname", "")
-          localStorage.setItem("email", "")
-          localStorage.setItem("range", "")
-          localStorage.setItem("id", "")
         });
     },
 
@@ -228,8 +229,8 @@ export default {
      * Método para cargar todos los Post que estan creados, enviando una petición(get) al backend, y luegos mostrarlos
      */
     loadPosts() {
-      let index = (this.$route.query.page)? this.$route.query.page: 1
-      let topic = (this.$route.query.topic)? this.$route.query.topic: 'home' 
+      let index = (this.$route.query.page) ? this.$route.query.page : 1
+      let topic = (this.$route.query.topic) ? this.$route.query.topic : 'home'
       Axios.get(`${this.url}/post/${topic}/${index}`, {
         headers: {
           "Cache-Control": "no-cache",
@@ -257,16 +258,16 @@ export default {
     updateLike(post, isOldLike) {
       let payload = {id_post: post._id, id_user: this.user_id}
       Axios.post(this.url + "/post/updateLikes", payload)
-      .then(res => {
-        if (isOldLike) {
-          post.nlikes --
-          let idx = post.likes.indexOf(this.user_id)
-          post.likes.splice(idx, 1)
-        } else {
-          post.nlikes ++
-          post.likes.push(this.user_id)
-        }
-      }).catch(e => {
+        .then(res => {
+          if (isOldLike) {
+            post.nlikes--
+            let idx = post.likes.indexOf(this.user_id)
+            post.likes.splice(idx, 1)
+          } else {
+            post.nlikes++
+            post.likes.push(this.user_id)
+          }
+        }).catch(e => {
         console.log(e)
       })
     },
@@ -275,7 +276,7 @@ export default {
      * Método para general el link, cada que se cambia la pagina para ver las publicaciones
      */
     linkGen(pageNum) {
-      let querys = (this.$route.query.topic)? '?topic=' + this.$route.query.topic: '?'
+      let querys = (this.$route.query.topic) ? '?topic=' + this.$route.query.topic : '?'
       querys += pageNum === 1 ? "&" : `&page=${pageNum}`
       console.log(querys)
       return querys
@@ -284,7 +285,7 @@ export default {
     /**
      * Método para chequear el formato del pdf
      */
-    checkPDFFormat(url){
+    checkPDFFormat(url) {
       const regex = /.pdf/;
       return (".pdf" == url.match(regex));
 
@@ -298,10 +299,10 @@ export default {
     changeTopic(topic) {
       topic = topic.replace(/\s/g, "_")
       this.$router.push({path: '/', query: {'topic': topic}})
-      setTimeout(() =>{
+      setTimeout(() => {
         window.location.reload()
       }, 10)
-      
+
     },
 
     /**
@@ -309,33 +310,30 @@ export default {
      */
     logOut() {
       this.$router.push("/login");
-      localStorage.setItem("nickname", "");
-      localStorage.setItem("email", "");
-      localStorage.setItem("image", "");
     },
 
     /**
      * Método para cargar los datos al localStorage de la persona que esta logueada en la aplicación
      */
     loadProfile() {
-      if (localStorage.getItem("nickname") == "" || localStorage.getItem("email") == "") {
-        this.$router.push("/login")
-
-      } else {
-        this.nickname = localStorage.getItem("nickname");
-        this.email = localStorage.getItem("email");
-        this.image = localStorage.getItem("image");
-        this.user_id = localStorage.getItem("id");
-        console.log("range",localStorage.getItem("range"))
-        if (localStorage.getItem("range") == null) {
-          this.mod = false
-        } else {
-          this.mod = localStorage.getItem("range") != 1;
-        }
-        localStorage.removeItem("range")
-        console.log("Range later", localStorage.getItem("range"))
-      }
-    },
+      let url = config.url_api + "/login/decode"
+      console.log("Url", url)
+      let user
+      Axios
+        .get(url, {headers: {token: this.token}})
+        .then((response) => {
+          user = response.data
+          this.nickname = user.nickname;
+          this.email = user.email;
+          this.user_id = user._id;
+          this.range = user.range;
+        })
+        .catch((error) => {
+          console.log("Error")
+        });
+        this.mod =this.range != 1;
+    }
+    ,
 
     /**
      * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend
@@ -362,15 +360,15 @@ export default {
      */
     loadTopics() {
       Axios.get(this.url + "/topics")
-      .then(res => {
-        let data = []
-        res.data.forEach(topic => {
-          data.push(topic.name)
+        .then(res => {
+          let data = []
+          res.data.forEach(topic => {
+            data.push(topic.name)
+          })
+          this.topics = data
         })
-        this.topics = data
-      })
     }
-    
+
   }
 };
 </script>
@@ -466,10 +464,11 @@ export default {
   color: darkgrey;
 }
 
-.topicsDropDown a span{
+.topicsDropDown a span {
   color: white;
 }
-.link_file{
+
+.link_file {
   border-color: lightgrey;
   border-style: solid;
   border-width: 1px;

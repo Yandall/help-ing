@@ -29,4 +29,6 @@ router.post("/", _controller.validate_user)
 //endpoint para validar si el token del usuario no ha expirado
 router.get("/verify", _controller.verify_authentication)
 
+router.get("/decode", _controller.decode)
+
 module.exports = router;

@@ -74,7 +74,8 @@ let generate_token = (user) => {
  * @returns Json 
  */
 let decode_token = (token) => {
-    return jwt.decode(token, SECRET_KEY)
+
+    return jwt.decode(token.toString(), SECRET_KEY)
 }
 
 /**
@@ -101,14 +102,10 @@ let validate_user = (req, res) => {
         validate_data(body)
         getUser(body).then((answer) => {
             if (answer) {
-                let token = generate_token(body)
+                let token = generate_token(answer)
                 res.status(200).send({
                     ok: true,
                     message: "Persona autenticada",
-                    nickname: answer.nickname,
-                    email: answer.email,
-                    range: answer.range,
-                    _id: answer._id,
                     image: answer.image,
                     token : token
 
@@ -149,7 +146,22 @@ let verify_authentication = (req, res) => {
         })
     }
 }
+let decode = (req, res) =>{
+    try{
+        let token = req.headers.token
+        let data = decode_token(token)
+        res.status(200).send({
+            ok: true,
+            data:data
 
+        })
+    }catch(error){
+        res.status(400).send({
+            ok: false,
+            message:"Error"
+        })
+    }
+}
 
 //se eportan los métodos y funciones para poder utilizarlos luego
 module.exports = {
@@ -159,5 +171,6 @@ module.exports = {
     validate_token,
     decode_token,
     validate_user,
-    verify_authentication
+    verify_authentication,
+    decode
 }

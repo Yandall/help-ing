@@ -2,57 +2,56 @@
 
   <div class="body">
 
-    <b-container >
+    <b-container>
       <b-row>
-        <b-col >
+        <b-col>
 
 
-
-          <b-img src="../static/logo_login.png" height="200" width="400" ></b-img>
+          <b-img src="../static/logo_login.png" height="200" width="400"></b-img>
         </b-col>
         <b-col align-self="center">
           <b-form action="javascript:void(0)">
             <b-card-group>
-              <b-card class="card-login" >
+              <b-card class="card-login">
 
                 <div class="container_login">
                   <div class="tittle">{{ message }}</div>
                 </div>
 
-                <br />
+                <br/>
 
-                <b-form-group @submit.stop.prevent >
+                <b-form-group @submit.stop.prevent>
                   <b-form-invalid-feedback :state="validate_email">*</b-form-invalid-feedback>
                   <b-input-group size="sm" class="mb-2">
                     <b-input-group-prepend is-text>
                       <b-icon icon="envelope"></b-icon>
                     </b-input-group-prepend>
-                  <b-form-input
-                    class="form-control"
-                    v-model="usuario.email"
-                    type="email"
-                    placeholder="Ingrese su correo electronico"
-                    id="email"
-                    size="lg"
-                    icon="envelope"
-                  />
+                    <b-form-input
+                      class="form-control"
+                      v-model="usuario.email"
+                      type="email"
+                      placeholder="Ingrese su correo electronico"
+                      id="email"
+                      size="lg"
+                      icon="envelope"
+                    />
 
                   </b-input-group>
                 </b-form-group>
 
-                <b-form-group @submit.stop.prevent >
+                <b-form-group @submit.stop.prevent>
                   <b-form-invalid-feedback :state="validate_password">*</b-form-invalid-feedback>
                   <b-input-group size="sm" class="mb-2">
                     <b-input-group-prepend is-text>
                       <b-icon icon="shield-lock"></b-icon>
                     </b-input-group-prepend>
-                  <b-form-input
-                    class="form-control"
-                    type="password"
-                    v-model="usuario.password"
-                    placeholder="Ingrese su contraseña"
-                    id="password"
-                    size="lg"/>
+                    <b-form-input
+                      class="form-control"
+                      type="password"
+                      v-model="usuario.password"
+                      placeholder="Ingrese su contraseña"
+                      id="password"
+                      size="lg"/>
                   </b-input-group>
 
                 </b-form-group>
@@ -68,7 +67,8 @@
                   id="show-btn"
                   @click="mostrar_modal"
                   block
-                  variant="outline-danger">Crear una Cuenta</b-button>
+                  variant="outline-danger">Crear una Cuenta
+                </b-button>
               </b-card>
 
             </b-card-group>
@@ -132,7 +132,7 @@
               <b-button @click="uploadImage()" variant="outline-danger">Crear cuenta</b-button>
             </b-modal>
           </b-form>
-          <br />
+          <br/>
         </b-col>
 
       </b-row>
@@ -144,9 +144,10 @@
 
 <script>
 import Axios from "axios"
-import { BootstrapVueIcons } from 'bootstrap-vue';
+import {BootstrapVueIcons} from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 import md5 from 'md5'
+
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/helping-developer/image/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'myimzr53'
 export default {
@@ -182,7 +183,7 @@ export default {
   computed: {
     fileName() {
       return this.file.name;
-    },validate_email() {
+    }, validate_email() {
       return this.usuario.email.length > 0;
     },
 
@@ -201,11 +202,7 @@ export default {
      *sino lo esta, carga la pagina del login
      */
     loadPage() {
-      if (localStorage.getItem("nickname") == ""){
-        this.$router.push("/login");
-      } else{
-        this.$router.push("/");
-      }
+
       let url = "http://localhost:8080/";
       this.url = url;
     },
@@ -218,7 +215,7 @@ export default {
         "http://localhost:8080/login"
 
       if (this.usuario.email.length > 0 && this.usuario.password.length > 0) {
-        let payload = {... this.usuario}
+        let payload = {...this.usuario}
         payload.password = md5(payload.password)
 
         Axios.post(url, payload)
@@ -226,20 +223,13 @@ export default {
             let user = this.user
             let data = response.data
             if (data.ok) {
-              localStorage.setItem("nickname", data.nickname)
-              localStorage.setItem("email", data.email)
-              localStorage.setItem("range", data.range)
-              localStorage.setItem("id", data._id)
-              localStorage.setItem("token", data.token)
+              document.cookie = `token=${data.token}`
               if (data.image) {
-                localStorage.setItem("image", data.image);
+                document.cookie = `image=${data.image}`;
               } else {
-                localStorage.setItem(
-                  "image",
-                  "https://external-content.duckduckgo.com/iu/" +
-                  "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
-                  "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"
-                );
+                document.cookie = `image=${"https://external-content.duckduckgo.com/iu/" +
+                "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
+                "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"}`
               }
 
               this.$router.push("/");
@@ -278,10 +268,10 @@ export default {
           return
         }
 
-        if(this.tempUser.clave == ""){
+        if (this.tempUser.clave == "") {
           alert("Todos los campo son obligatorios")
           return
-        }else {
+        } else {
           user.password = md5(this.tempUser.clave)
         }
 
@@ -300,9 +290,9 @@ export default {
     },
 
     /**
-       *Método para subir el archivo a cloudinary, y se obtiene el link que queda asociado al post
-       */
-      uploadImage() {
+     *Método para subir el archivo a cloudinary, y se obtiene el link que queda asociado al post
+     */
+    uploadImage() {
       const IMG = document.getElementById('file');
       const formData = new FormData();
 
@@ -310,8 +300,8 @@ export default {
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
       Axios.post(CLOUDINARY_URL, formData, {
-        headers:{
-          'content-type':'multipart/form-data'
+        headers: {
+          'content-type': 'multipart/form-data'
         }
       }).then((response) => {
         console.log("Imagen de usuario agregada");
@@ -321,11 +311,11 @@ export default {
         IMG.src = response.data.secure_url;
         this.createAccount(this.file)
       })
-      .catch((error) =>{
-        console.log("Hubo un error");
-        console.log(error);
-      })
-      },
+        .catch((error) => {
+          console.log("Hubo un error");
+          console.log(error);
+        })
+    },
 
     /**
      * Método para limpiar los campos del form
@@ -389,4 +379,4 @@ export default {
 };
 </script>
 
-<style src="../css/login.css" />
+<style src="../css/login.css"/>
