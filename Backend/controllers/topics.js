@@ -36,7 +36,7 @@ async function saveTopic(req, res){
         let theme = {
             name: req.body.name
         }
-        await createTheme(theme)
+        await createTopic(theme)
         res.status(200).send('Tema agregado')
     }catch(e){
         res.status(500).send("Error al crear")

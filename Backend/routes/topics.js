@@ -4,6 +4,6 @@ const topicController = require('../controllers/topics')
 
 router.get('/', topicController.getTopic)
 
-router.post('/saveTheme', topicController.saveTopic)
+router.post('/saveTopic', topicController.saveTopic)
 
 module.exports = router;

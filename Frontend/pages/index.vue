@@ -27,6 +27,15 @@
           <b-button
             variant="light"
             size="sm"
+            style="margin-inline: 5px"
+            @click="showModalTopic"
+            v-if="!mod"
+          >Crear Tema
+          </b-button>
+
+          <b-button
+            variant="light"
+            size="sm"
             v-if="mod"
             style="margin-inline: 5px"
             :to="{ name: 'createUC' }"
@@ -157,7 +166,29 @@
         ></b-pagination-nav>
       </div>
     </div>
+
+
+    <b-modal ref="modalCreateTopic" hide-footer title="Crear Tema">
+      <form ref="form" @submit.stop.prevent="solicitud">
+        <b-form-group
+
+          label="Tema"
+          label-for="topic"
+          invalid-feedback="El nombre del tema es obligatorio"
+        >
+          <b-form-input
+            id="topic"
+            v-model="topicInput"
+            required
+            size="lg"
+          ></b-form-input>
+        </b-form-group>
+      </form>
+      <b-button @click="createTopic()" variant="outline-danger">Crear</b-button>
+    </b-modal>
   </div>
+
+
 </template>
 
 <script>
@@ -201,7 +232,8 @@ export default {
       typeSearch: 'title',
       search: '',
       mod: false,
-      isSearching: false
+      isSearching: false,
+      topicInput: ''
     };
   },
 
@@ -369,6 +401,31 @@ export default {
           })
           this.topics = data
         })
+    },
+
+    /**
+     * Metodo para crear un tema y guardarlo en la base de datos
+     */
+    createTopic(){
+      //TO DO
+
+      if(this.topics.includes(this.topicInput)){
+        console.log("temas: ", this.topics)
+        console.log("tema a crear:", this.topicInput)
+        alert("Este tema ya existe, método en proceso");
+      }else{
+        alert("Este tema NO existe, método en proceso");
+        console.log("temas: ", this.topics)
+        console.log("tema a crear:", this.topicInput)
+      }
+
+    },
+
+    /**
+     * Metodo para cargar modal de crear tema
+     */
+    showModalTopic(){
+      this.$refs["modalCreateTopic"].show();
     }
 
   }

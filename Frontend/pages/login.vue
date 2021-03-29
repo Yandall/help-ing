@@ -71,6 +71,7 @@
                 </b-button>
               </b-card>
 
+
             </b-card-group>
             <b-modal ref="my-modal" hide-footer title="Crear una cuenta">
               <form ref="form" @submit.stop.prevent="solicitud">
@@ -139,6 +140,8 @@
     </b-container>
 
   </div>
+
+
 
 </template>
 
