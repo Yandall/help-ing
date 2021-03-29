@@ -31,14 +31,12 @@ const fs = require('fs')
  */
  async function saveComment(req, res) {
     try {
-        let fileName = (req.file) ? req.file.originalname : ''
         let post = {
             id_user: req.body.id_user,
             id_post: req.body.id_post,
             date: req.body.date,
             comment: req.body.comment
         }
-        console.log(post.date)
         await createComment(post)
         res.status(200).send('Comment creado')
     } catch(e) {
@@ -48,8 +46,32 @@ const fs = require('fs')
 }
 
 
+/**
+ * Método para filtrar los comentarios que pertenecen a un post
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
+async function getComments(req, res) {
+    const connection = await db.getConnection()
+    try {
+        let dbo = connection.db("helping")
+        let filter = {"id_post": req.params.id_post};
+        let cursor = dbo.collection("comments").find(filter)
+        let values = await cursor.toArray()
+        res.status(200).send(values)
+    } catch (e) {
+        res.status(500).send("Hubo un error")
+        console.error(e)
+    } finally {
+        if(connection.isConnected()){
+            await connection.close()
+        }
+    }
+
+}
 
 //se exportan los métodos y funciones para usarlos despues
 module.exports = {
     saveComment, 
+    getComments
 }
