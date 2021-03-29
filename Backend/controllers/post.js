@@ -72,7 +72,6 @@ async function createPost(data= {}) {
         if (connection.isConnected())
             await connection.close()
     }
-
 }
 
 /**
