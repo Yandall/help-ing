@@ -224,14 +224,6 @@ export default {
             let data = response.data
             if (data.ok) {
               document.cookie = `token=${data.token}`
-              if (data.image) {
-                document.cookie = `image=${data.image}`;
-              } else {
-                document.cookie = `image=${"https://external-content.duckduckgo.com/iu/" +
-                "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
-                "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"}`
-              }
-
               this.$router.push("/");
               return;
             } else {

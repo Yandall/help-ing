@@ -211,10 +211,8 @@ export default {
      */
     verifyToken() {
       let token = document.cookie.split(";").toString().split("token=")[1]
-      let image = document.cookie.split(";").toString().split("token=")[0]
       let url = config.url_api + "/login/verify";
       this.token = token;
-      this.image = image;
       Axios
         .get(url, {headers: {token: token}})
         .then((response) => {
@@ -310,6 +308,7 @@ export default {
      */
     logOut() {
       this.$router.push("/login");
+      document.cookie = `token=`
     },
 
     /**
@@ -317,21 +316,24 @@ export default {
      */
     loadProfile() {
       let url = config.url_api + "/login/decode"
-      console.log("Url", url)
-      let user
       Axios
         .get(url, {headers: {token: this.token}})
         .then((response) => {
-          user = response.data
+          let user = response.data.data
           this.nickname = user.nickname;
           this.email = user.email;
           this.user_id = user._id;
           this.range = user.range;
+          this.image = user.image ? user.image : "https://external-content.duckduckgo.com/iu/" +
+            "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
+            "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1"
+          console.log("User", user)
         })
         .catch((error) => {
+          console.log(error)
           console.log("Error")
         });
-        this.mod =this.range != 1;
+        this.mod = this.range == 1;
     }
     ,
 
