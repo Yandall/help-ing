@@ -22,7 +22,6 @@ async function getPosts(req,res) {
                 .limit(nPerPage)
         let values = await cursor.toArray()
         let cantPosts = await dbo.collection('posts').countDocuments(filter)
-        console.log(values)
         res.status(200).send({values, cantPosts})
     } catch (e) {
         res.status(500).send('Hubo un error')
@@ -47,8 +46,6 @@ async function searchPost(req,res) {
         let dbo = connection.db('helping')
         let cursor = dbo.collection('posts').find(filter).sort({'post_date': -1})
         let values = await cursor.toArray()
-        console.log(values)
-        console.log('filter:', filter)
         res.status(200).send(values)
     } catch (e) {
         res.status(500).send('Hubo un error')
@@ -75,7 +72,6 @@ async function createPost(data= {}) {
         if (connection.isConnected())
             await connection.close()
     }
-
 }
 
 /**
