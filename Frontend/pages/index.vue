@@ -342,9 +342,10 @@ export default {
      */
     searchPost() {
       this.isSearching = true
-      console.log(`${this.url}/post/${this.typeSearch}/${this.search}`)
-      Axios.get(`${this.url}/post/${this.typeSearch}/${this.search}`)
+      console.log(`${this.url}/post/search/${this.typeSearch}/${this.search}`)
+      Axios.get(`${this.url}/post/search/${this.typeSearch}/${this.search}`)
         .then(res => {
+          console.log("RESPONSE", res)
           let data = res.data;
           data.forEach(item => {
             item.post_date = item.post_date.substring(0, 10);
