@@ -105,7 +105,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault()
       this.uploadImage()
-      //this.clearInputs()
+
     },
     /**
      * Método para capturar la información del form, despues se envia al backend mediante una petición(post)
@@ -114,7 +114,6 @@ export default {
     async savePost() {
       try {
         await this.getName()
-        console.log("NAMEEE", this.nickname)
         if (!this.form.tags) this.form.tags = ''
         var formData = new FormData()
         formData.append('file', this.file)
@@ -123,10 +122,10 @@ export default {
         formData.append('tags', this.form.tags)
         formData.append('author', this.form.author)
         formData.append('post_date', this.form.post_date)
-
         console.log("Form", this.form)
         const url = `${config.url_api}/post/saveFile`
         const res = await Axios.post(url, formData)
+        this.clearInputs()
         alert(res.data)
       } catch (e) {
         console.error(e)
@@ -141,12 +140,10 @@ export default {
         .get(url2, {headers: {token: token}})
         .then((response) => {
           let user = response.data
-          console.log("USER", user.data.nickname)
           this.form.author = user.data.nickname
         })
         .catch((error) => {
           console.log(error)
-          console.log("Error")
         })
     },
     /**
