@@ -214,7 +214,7 @@ export default {
         .get(url, {headers: {token: token}})
         .then((response) => {
         })
-        .catch((error) =>  {
+        .catch((error) => {
           console.log(error);
           this.$router.push("/login");
           localStorage.setItem("nickname", "")
