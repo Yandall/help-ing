@@ -459,6 +459,10 @@ export default {
   margin: 15px 0 15px 0;
 }
 
+.card-img-top {
+  max-width: inherit;
+}
+
 .navbar {
   background-color: #A00001;
 }
