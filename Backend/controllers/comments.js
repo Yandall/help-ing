@@ -39,9 +39,9 @@ const fs = require('fs')
             comment: req.body.comment
         }
         await createComment(post)
-        res.status(200).send('Comment creado')
+        res.status(200).send('Su comentario fue creado exitosamente')
     } catch(e) {
-        res.status(500).send('Error al crear el comment')
+        res.status(500).send('Su comentario no pudo ser creado, por favor intentelo de nuevo')
         console.error(e)
     }
 }
