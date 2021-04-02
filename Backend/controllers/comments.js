@@ -31,10 +31,11 @@ const fs = require('fs')
  */
  async function saveComment(req, res) {
     try {
+        let date = new Date(parseInt(req.body.date, 10))
         let post = {
             id_user: req.body.id_user,
             id_post: req.body.id_post,
-            date: req.body.date,
+            date: date,
             comment: req.body.comment
         }
         await createComment(post)
