@@ -33,13 +33,16 @@ const fs = require('fs')
     try {
         let date = new Date(parseInt(req.body.date, 10))
         let post = {
-            id_user: req.body.id_user,
-            id_post: req.body.id_post,
+            id_user: new mongo.ObjectId(req.body.id_user),
+            id_post: new mongo.ObjectId(req.body.id_post),
             date: date,
             comment: req.body.comment
         }
         await createComment(post)
-        res.status(200).send('Comment creado')
+        .then(bd_res => {
+            res.status(200).send('Comentario creado')
+        })
+        
     } catch(e) {
         res.status(500).send('Error al crear el comment')
         console.error(e)

@@ -1,7 +1,6 @@
 //se importan las librerias y archivos necesarios
 const db = require('../services/mongoDB')
 const mongo = require("mongodb")
-const fs = require('fs')
 
 /**
  * Función para obtener todos los registros de la colección 'posts' que estan en la base de datos, con saltos para mostrar la información
@@ -33,7 +32,7 @@ async function getPosts(req,res) {
 }
 
 /**
- * Función para buscar y obtener lso registros con un filtro que se le pasa por el body
+ * Función para buscar y obtener los registros con un filtro que se le pasa por el body
  * @param {*} req petición enviada desde el front
  * @param {*} res contiene la respuesta de la petición http 
  */
