@@ -2,6 +2,24 @@
 const db = require('../services/mongoDB')
 const mongo = require("mongodb")
 
+async function getSinglePost(req, res) {
+    const connection = await db.getConnection()    
+    try {
+        let id = new mongo.ObjectId(req.params.id)
+        let pipeline = singlePostPipeline
+        pipeline[0].$match._id = id
+        let dbo = connection.db('helping')
+        let cursor = dbo.collection('posts').aggregate(pipeline)
+        let values = await cursor.toArray()
+        res.status(200).send(values)
+    } catch (err) {
+        res.status(500).send("Error getting post")
+    } finally {
+        if (connection.isConnected())
+            await connection.close()
+    }
+}
+
 /**
  * Función para obtener todos los registros de la colección 'posts' que estan en la base de datos, con saltos para mostrar la información
  * por paginas
@@ -133,8 +151,88 @@ async function  updateLikes(req, res) {
     }
 }
 
+var singlePostPipeline = [
+    {
+      '$match': {
+        '_id': null
+      }
+    }, {
+      '$lookup': {
+        'from': 'comments', 
+        'localField': '_id', 
+        'foreignField': 'id_post', 
+        'as': 'comments'
+      }
+    }, {
+      '$unwind': {
+        'path': '$comments'
+      }
+    }, {
+      '$lookup': {
+        'from': 'users', 
+        'let': {
+          'id_user': '$comments.id_user'
+        }, 
+        'pipeline': [
+          {
+            '$match': {
+              '$expr': {
+                '$eq': [
+                  '$_id', '$$id_user'
+                ]
+              }
+            }
+          }, {
+            '$project': {
+              'nickname': 1, 
+              '_id': 0
+            }
+          }
+        ], 
+        'as': 'user'
+      }
+    }, {
+      '$unwind': {
+        'path': '$user'
+      }
+    }, {
+      '$addFields': {
+        'comments.user': '$user.nickname'
+      }
+    }, {
+      '$group': {
+        '_id': '$_id', 
+        'comments': {
+          '$push': '$comments'
+        }, 
+        'title': {
+          '$last': '$title'
+        }, 
+        'body': {
+          '$last': '$body'
+        }, 
+        'tags': {
+          '$last': '$tags'
+        }, 
+        'author': {
+          '$last': '$author'
+        }, 
+        'post_date': {
+          '$last': '$post_date'
+        }, 
+        'file': {
+          '$last': '$file'
+        }, 
+        'likes': {
+          '$last': '$likes'
+        }
+      }
+    }
+]
+
 //se exportan los métodos y funciones para usarlos despues
 module.exports = {
+    getSinglePost,
     getPosts, 
     searchPost, 
     saveFile, 

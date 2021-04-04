@@ -32,5 +32,8 @@ router.get('/search/:type/:input', post_controller.searchPost)
 router.post('/saveFile', upload.single('file'), post_controller.saveFile)
 //endpoint para actualizar los likes de la publicación
 router.post(('/updateLikes'), post_controller.updateLikes)
+//endpoint para obtener solo una publicación
+router.get(('/:id'), post_controller.getSinglePost)
+
 
 module.exports = router
