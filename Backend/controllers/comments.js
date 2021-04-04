@@ -44,7 +44,7 @@ const fs = require('fs')
         })
         
     } catch(e) {
-        res.status(500).send('Error al crear el comment')
+        res.status(500).send('Su comentario no pudo ser creado, por favor intentelo de nuevo')
         console.error(e)
     }
 }

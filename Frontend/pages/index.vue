@@ -457,18 +457,43 @@ export default {
     /**
      * Metodo para crear un tema y guardarlo en la base de datos
      */
-    createTopic() {
+    async createTopic() {
       //TO DO
+      try{
 
-      if (this.topics.includes(this.topicInput)) {
-        console.log("temas: ", this.topics);
-        console.log("tema a crear:", this.topicInput);
-        alert("Este tema ya existe, método en proceso");
-      } else {
-        alert("Este tema NO existe, método en proceso");
-        console.log("temas: ", this.topics);
-        console.log("tema a crear:", this.topicInput);
+        let url = config.url_api + '/topics/saveTopic/';
+        console.log(url)
+
+
+        if(!this.topicInput.trim() == ''){
+          if (this.topics.includes(this.topicInput)) {
+            alert("Este tema ya existe");
+          } else {
+            var formData = new FormData();
+            //console.log(this.topicInput);
+            //formData.append('name', this.topicInput);
+            //console.log(formData)
+            var newTopic ={}
+            newTopic.name = this.topicInput
+            console.log(newTopic)
+            const res  = await Axios.post(url, newTopic);
+            alert(res.data);
+            location.reload();
+
+          }
+
+
+        }else{
+          alert("Rellene todos los campos")
+        }
+
+
+      }catch(e){
+        console.error(e);
       }
+
+
+
     },
 
     /**
