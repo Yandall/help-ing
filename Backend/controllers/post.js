@@ -6,7 +6,7 @@ async function getSinglePost(req, res) {
     const connection = await db.getConnection()    
     try {
         let id = new mongo.ObjectId(req.params.id)
-        let pipeline = singlePostPipeline
+        let pipeline = postPipeline
         pipeline[0].$match._id = id
         let dbo = connection.db('helping')
         let cursor = dbo.collection('posts').aggregate(pipeline)
@@ -151,7 +151,11 @@ async function  updateLikes(req, res) {
     }
 }
 
-var singlePostPipeline = [
+/**
+ * Pipeline necesario para obtener post con comentarios. Modificar el _id en $match para obtener info de un solo post.
+ * Eliminar el [0] para obtener todos los post con todos los comentarios
+ */
+var postPipeline = [
     {
       '$match': {
         '_id': null
