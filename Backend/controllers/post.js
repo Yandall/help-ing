@@ -169,7 +169,8 @@ var postPipeline = [
       }
     }, {
       '$unwind': {
-        'path': '$comments'
+        'path': '$comments',
+        'preserveNullAndEmptyArrays': true
       }
     }, {
       '$lookup': {
@@ -197,7 +198,8 @@ var postPipeline = [
       }
     }, {
       '$unwind': {
-        'path': '$user'
+        'path': '$user',
+        'preserveNullAndEmptyArrays': true
       }
     }, {
       '$addFields': {
