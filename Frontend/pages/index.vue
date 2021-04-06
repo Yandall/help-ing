@@ -108,6 +108,7 @@
           style="border: none"
         >
           <h2>{{ item.title }}</h2>
+          <b-link @click="getPostData(item._id)">{{item.title}}</b-link>
           <b-card
             :img-src="item.file"
             img-alt=""
@@ -502,6 +503,14 @@ export default {
     showModalTopic() {
       this.$refs["modalCreateTopic"].show();
     },
+
+    /**
+     * Metodo para almacenar el id de un post en el localstorage para ser accedido por el mediante otra url
+     */
+    getPostData(id){
+    localStorage.setItem("id_post", id);
+    location.assign("singlePost")
+    }
   },
 };
 </script>
@@ -618,6 +627,15 @@ export default {
   resize: none;
   height: 2.5rem;
 }
+
+/**estilos para el link */
+body {
+  width: 300px;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  font-family: sans-serif;
+}
+
 </style>
 
 

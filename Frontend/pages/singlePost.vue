@@ -81,6 +81,7 @@ import config from "../assets/config"
 
 export default {
   beforeMount() {
+    this.getPostData();
     //se hace un llamado a los métodos recien se carga la pagina, para mostrar la información
     this.loadPost();
     this.verifyToken();
@@ -101,7 +102,7 @@ export default {
         likes:''
 
       },
-      id:'606211a7141e863fc8f9fc76',
+      id:'',
       url: `${config.url_api}`,
       nickname: "",
       email: "",
@@ -212,6 +213,13 @@ export default {
       const regex = /.pdf/;
       return ".pdf" == url.match(regex);
     },
+
+    /**
+     * Metodo para tomar el id del post a mostrar
+     */
+    getPostData(){
+    this.id = localStorage.getItem("id_post");
+    }
   }
 }
 </script>
