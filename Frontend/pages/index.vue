@@ -107,8 +107,7 @@
           class="card-post"
           style="border: none"
         >
-          <h2>{{ item.title }}</h2>
-          <b-link @click="getPostData(item._id)">{{item.title}}</b-link>
+          <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
           <b-card
             :img-src="item.file"
             img-alt=""
@@ -634,6 +633,11 @@ body {
   margin: 0 auto;
   font-size: 1.2rem;
   font-family: sans-serif;
+}
+
+.title-link:hover {
+  cursor:pointer;
+  text-decoration:underline ;
 }
 
 </style>
