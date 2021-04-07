@@ -75,11 +75,11 @@
             <b-form-textarea
               class="comment-input"
               maxlength="300"
-              :ref="post._id"
+              v-model="currentComment"
               :id="post._id"
             ></b-form-textarea>
             <b-input-group-append>
-              <b-button @click="sendComment(post._id)">Comentar</b-button>
+              <b-button @click="sendComment">Comentar</b-button>
             </b-input-group-append>
           </b-input-group>
     </div>
@@ -118,8 +118,8 @@ export default {
         post_date:'',
         file:'',
         likes:''
-
       },
+      currentComment: '',
       id:'',
       url: `${config.url_api}`,
       nickname: "",
@@ -139,14 +139,12 @@ export default {
     dateSimplified(value){
       return value!=null ? value.substring(0, 10) : value
     },
-    sendComment(id_post) {
-      console.log(id_post)
+    sendComment() {
       let date = Date.now();
-      console.log(this.$refs[id_post])
-      let comment = this.$refs[id_post][0].localValue;
+      let comment = this.currentComment
       let commentData = {
-        id_user: this.user_id,
-        id_post: id_post,
+        'id_user': this.user_id,
+        'id_post': this.id,
         date: date,
         comment: comment,
       };
@@ -161,7 +159,7 @@ export default {
             alert(err.response);
           })
           .finally(() => {
-            this.$refs[id_post][0].localValue = "";
+            this.currentComment = ""
           });
       }
     },

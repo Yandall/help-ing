@@ -31,7 +31,7 @@ const fs = require('fs')
  */
  async function saveComment(req, res) {
     try {
-        let date = new Date(parseInt(req.body.date, 10))
+        let date = req.body.date
         let post = {
             id_user: new mongo.ObjectId(req.body.id_user),
             id_post: new mongo.ObjectId(req.body.id_post),
