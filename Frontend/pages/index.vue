@@ -30,7 +30,7 @@
             size="sm"
             style="margin-inline: 5px"
             @click="showModalTopic"
-            v-if="!mod"
+            v-if="mod"
             >Crear Tema
           </b-button>
 
@@ -413,13 +413,16 @@ export default {
             : "https://external-content.duckduckgo.com/iu/" +
               "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
               "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1";
-          console.log("User", user);
+          this.mod = this.range == 2;
+          //console.log("User", user);
         })
         .catch((error) => {
-          console.log(error);
           console.log("Error");
+          console.log(error);
+
         });
-      this.mod = this.range == 1;
+
+
     },
     /**
      * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend
