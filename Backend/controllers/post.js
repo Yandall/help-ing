@@ -3,7 +3,7 @@ const db = require('../services/mongoDB')
 const mongo = require("mongodb")
 
 async function getSinglePost(req, res) {
-    const connection = await db.getConnection()    
+    const connection = await db.getConnection()
     try {
         let id = new mongo.ObjectId(req.params.id)
         let pipeline = postPipeline
@@ -13,6 +13,7 @@ async function getSinglePost(req, res) {
         let values = await cursor.toArray()
         res.status(200).send(values)
     } catch (err) {
+        console.log(err)
         res.status(500).send("Error getting post")
     } finally {
         if (connection.isConnected())
@@ -24,25 +25,29 @@ async function getSinglePost(req, res) {
  * Función para obtener todos los registros de la colección 'posts' que estan en la base de datos, con saltos para mostrar la información
  * por paginas
  * @param {*} req petición enviada desde el front
- * @param {*} res contiene la respuesta de la petición http 
+ * @param {*} res contiene la respuesta de la petición http
  */
-async function getPosts(req,res) {
+async function getPosts(req, res) {
     const connection = await db.getConnection()
     try {
+        let pipeline = [...postPipeline]
+        pipeline.splice(0,1)
         let pageNumber = req.params.page
         let topic = req.params.topic
-        let nPerPage = 10
+        let nPerPage = 5
         let dbo = connection.db('helping')
-        let filter = topic!="home" ? {'topic':topic.replace('_', " ")} : {}
-        let cursor = dbo.collection('posts').find(filter).sort({'post_date': -1})
-                .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
-                .limit(nPerPage)
+        let filter = topic != "home" ? {'topic': topic.replace('_', " ")} : {}
+        let cursor = dbo.collection('posts').aggregate(pipeline)
+            .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
+            .limit(nPerPage)
         let values = await cursor.toArray()
         let cantPosts = await dbo.collection('posts').countDocuments(filter)
         res.status(200).send({values, cantPosts})
+
     } catch (e) {
-        res.status(500).send('Hubo un error')
         console.log(e)
+        res.status(500).send('Hubo un error')
+
     } finally {
         if (connection.isConnected())
             await connection.close()
@@ -52,9 +57,9 @@ async function getPosts(req,res) {
 /**
  * Función para buscar y obtener los registros con un filtro que se le pasa por el body
  * @param {*} req petición enviada desde el front
- * @param {*} res contiene la respuesta de la petición http 
+ * @param {*} res contiene la respuesta de la petición http
  */
-async function searchPost(req,res) {
+async function searchPost(req, res) {
     const connection = await db.getConnection()
     try {
         let type = req.params.type
@@ -77,13 +82,13 @@ async function searchPost(req,res) {
  * Función para crear un nuevo registro en la colección de 'posts'
  * @param {*} data contiene la información para crear un nuevo registro en 'posts'
  */
-async function createPost(data= {}) {
+async function createPost(data = {}) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
         data.post_date = new Date(parseInt(data.post_date, 10))
         await dbo.collection('posts').insertOne(data)
-    }catch (e) {
+    } catch (e) {
         console.log(e)
     } finally {
         if (connection.isConnected())
@@ -107,12 +112,12 @@ async function saveFile(req, res) {
             author: req.body.author,
             post_date: req.body.post_date,
             file: req.body.file,
-            likes : []
+            likes: []
         }
         console.log(post.post_date)
         await createPost(post)
         res.status(200).send('Post creado')
-    } catch(e) {
+    } catch (e) {
         res.status(500).send('Error al crear el post')
         console.error(e)
     }
@@ -123,9 +128,9 @@ async function saveFile(req, res) {
  * Esta función busca si en el arreglo de los likes de esa publicación esta el id del usuario, saca el id del arreglo(le quita el like)
  * pero si no esta agrega el id al arreglo de likes(le agrega el like). Esto permite saber cuantos likes tiene cada publicación
  * @param {*} req petición enviada desde el front
- * @param {*} res contiene la respuesta de la petición http 
+ * @param {*} res contiene la respuesta de la petición http
  */
-async function  updateLikes(req, res) {
+async function updateLikes(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db('helping')
@@ -134,9 +139,10 @@ async function  updateLikes(req, res) {
         let id_user = req.body.id_user
         console.log("usuario", id_user, "post", id_post)
         let result = await dbo.collection('posts').updateOne({_id: id_post},
-            {$pull: {"likes": id_user}
-        })
-        if(result.modifiedCount == 0) {
+            {
+                $pull: {"likes": id_user}
+            })
+        if (result.modifiedCount == 0) {
             result = await dbo.collection('posts').updateOne({_id: id_post},
                 {$push: {"likes": id_user}})
         }
@@ -157,90 +163,183 @@ async function  updateLikes(req, res) {
  */
 var postPipeline = [
     {
-      '$match': {
-        '_id': null
-      }
-    }, {
-      '$lookup': {
-        'from': 'comments', 
-        'localField': '_id', 
-        'foreignField': 'id_post', 
-        'as': 'comments'
-      }
-    }, {
-      '$unwind': {
-        'path': '$comments',
-        'preserveNullAndEmptyArrays': true
-      }
-    }, {
-      '$lookup': {
-        'from': 'users', 
-        'let': {
-          'id_user': '$comments.id_user'
-        }, 
-        'pipeline': [
-          {
-            '$match': {
-              '$expr': {
-                '$eq': [
-                  '$_id', '$$id_user'
-                ]
-              }
-            }
-          }, {
-            '$project': {
-              'nickname': 1, 
-              '_id': 0
-            }
-          }
-        ], 
-        'as': 'user'
-      }
-    }, {
-      '$unwind': {
-        'path': '$user',
-        'preserveNullAndEmptyArrays': true
-      }
-    }, {
-      '$addFields': {
-        'comments.user': '$user.nickname'
-      }
-    }, {
-      '$group': {
-        '_id': '$_id', 
-        'comments': {
-          '$push': '$comments'
-        }, 
-        'title': {
-          '$last': '$title'
-        }, 
-        'body': {
-          '$last': '$body'
-        }, 
-        'tags': {
-          '$last': '$tags'
-        }, 
-        'author': {
-          '$last': '$author'
-        }, 
-        'post_date': {
-          '$last': '$post_date'
-        }, 
-        'file': {
-          '$last': '$file'
-        }, 
-        'likes': {
-          '$last': '$likes'
+        '$match': {
+            '_id': null
         }
-      }
+    },
+    {
+        '$lookup': {
+            'from': 'comments',
+            'localField': '_id',
+            'foreignField': 'id_post',
+            'as': 'comments'
+        }
+    }, {
+        '$unwind': {
+            'path': '$comments',
+            'preserveNullAndEmptyArrays': true
+        }
+    }, {
+        '$lookup': {
+            'from': 'users',
+            'let': {
+                'id_user': '$comments.id_user'
+            },
+            'pipeline': [
+                {
+                    '$match': {
+                        '$expr': {
+                            '$eq': [
+                                '$_id', '$$id_user'
+                            ]
+                        }
+                    }
+                }, {
+                    '$project': {
+                        'nickname': 1,
+                        '_id': 0
+                    }
+                }
+            ],
+            'as': 'user'
+        }
+    }, {
+        '$unwind': {
+            'path': '$user',
+            'preserveNullAndEmptyArrays': true
+        }
+    }, {
+        '$addFields': {
+            'comments.user': '$user.nickname'
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'comments': {
+                '$push': '$comments'
+            },
+            'title': {
+                '$last': '$title'
+            },
+            'body': {
+                '$last': '$body'
+            },
+            'tags': {
+                '$last': '$tags'
+            },
+            'author': {
+                '$last': '$author'
+            },
+            'post_date': {
+                '$last': '$post_date'
+            },
+            'file': {
+                '$last': '$file'
+            },
+            'likes': {
+                '$last': '$likes'
+            },
+            'topic': {
+                '$last': '$topic'
+            }
+        }
+    }, {
+        '$sort': {
+            'post_date': -1
+        }
+    }
+]
+
+var postPipeline2 = [
+
+    {
+        '$lookup': {
+            'from': 'comments',
+            'localField': '_id',
+            'foreignField': 'id_post',
+            'as': 'comments'
+        }
+    }, {
+        '$unwind': {
+            'path': '$comments',
+            'preserveNullAndEmptyArrays': true
+        }
+    }, {
+        '$lookup': {
+            'from': 'users',
+            'let': {
+                'id_user': '$comments.id_user'
+            },
+            'pipeline': [
+                {
+                    '$match': {
+                        '$expr': {
+                            '$eq': [
+                                '$_id', '$$id_user'
+                            ]
+                        }
+                    }
+                }, {
+                    '$project': {
+                        'nickname': 1,
+                        '_id': 0
+                    }
+                }
+            ],
+            'as': 'user'
+        }
+    }, {
+        '$unwind': {
+            'path': '$user',
+            'preserveNullAndEmptyArrays': true
+        }
+    }, {
+        '$addFields': {
+            'comments.user': '$user.nickname'
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'comments': {
+                '$push': '$comments'
+            },
+            'title': {
+                '$last': '$title'
+            },
+            'body': {
+                '$last': '$body'
+            },
+            'tags': {
+                '$last': '$tags'
+            },
+            'author': {
+                '$last': '$author'
+            },
+            'post_date': {
+                '$last': '$post_date'
+            },
+            'file': {
+                '$last': '$file'
+            },
+            'likes': {
+                '$last': '$likes'
+            },
+            'topic': {
+                '$last': '$topic'
+            }
+        }
+    }, {
+        '$sort': {
+            'post_date': -1
+        }
     }
 ]
 
 //se exportan los métodos y funciones para usarlos despues
 module.exports = {
     getSinglePost,
-    getPosts, 
-    searchPost, 
-    saveFile, 
+    getPosts,
+    searchPost,
+    saveFile,
     updateLikes,
 }

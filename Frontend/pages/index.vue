@@ -182,6 +182,7 @@
               <b-button @click="sendComment(item._id)">Comentar</b-button>
             </b-input-group-append>
           </b-input-group>
+          <b-table striped hover :items="item.comments" :fields="fields2" ></b-table>
         </b-list-group-item>
       </b-list-group>
 
@@ -242,6 +243,13 @@ export default {
       user_id: "",
       topics: {},
       token: "",
+      comments:[],
+      fields2:[{key:'user', label:'Usuario'},{key:'comment', label: 'Comentario'},{
+        // A virtual column with custom formatter
+        key: 'date',
+        label: 'Fecha comentario',
+        formatter:'dateSimplified'
+      }],
       fields: [
         {
           key: "title",
@@ -252,6 +260,7 @@ export default {
           key: "body",
           label: "Body",
         },
+
       ],
       numberPages: 1,
       perPage: 10,
@@ -265,6 +274,9 @@ export default {
   },
 
   methods: {
+    dateSimplified(value){
+      return value!=null ? value.substring(0, 10) : value
+    },
     /**
      * Método para validar que el token que esta en el local storage si sea un token valido
      */
@@ -303,6 +315,7 @@ export default {
           });
 
           this.post_list = data;
+
           this.numberPages = Math.ceil(res.data.cantPosts / this.perPage);
         })
         .catch((e) => {
