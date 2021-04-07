@@ -344,8 +344,9 @@ export default {
         });
     },
 
-    sendComment(id_post) {
+    sendComment(id_post, item) {
       let date = Date.now();
+      console.log("Item", item)
       let comment = this.$refs[id_post][0].localValue;
       let commentData = {
         id_user: this.user_id,
@@ -357,6 +358,7 @@ export default {
       else {
         Axios.post(this.url + "/comments/saveComment", commentData)
           .then((res) => {
+            addComment(item,commentData)
             alert(res.data);
           })
           .catch((err) => {
@@ -364,10 +366,10 @@ export default {
           })
           .finally(() => {
             this.$refs[id_post][0].localValue = "";
+            //await item.comments.push(commentData);
           });
       }
     },
-
     /**
      * Método para general el link, cada que se cambia la pagina para ver las publicaciones
      */
