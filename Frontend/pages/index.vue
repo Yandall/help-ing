@@ -358,8 +358,8 @@ export default {
       else {
         Axios.post(this.url + "/comments/saveComment", commentData)
           .then((res) => {
-            addComment(item,commentData)
             alert(res.data);
+            this.loadPosts()
           })
           .catch((err) => {
             alert(err.response);

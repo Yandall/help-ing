@@ -75,11 +75,11 @@
             <b-form-textarea
               class="comment-input"
               maxlength="300"
-              :ref="id"
-              :id="id"
+              :ref="post._id"
+              :id="post._id"
             ></b-form-textarea>
             <b-input-group-append>
-              <b-button @click="sendComment(id)">Comentar</b-button>
+              <b-button @click="sendComment(post._id)">Comentar</b-button>
             </b-input-group-append>
           </b-input-group>
     </div>
@@ -109,7 +109,7 @@ export default {
         formatter:'dateSimplified'
       }],
       post:{
-
+        _id:'',
         coments:[],
         title:'',
         body:'',
@@ -140,8 +140,9 @@ export default {
       return value!=null ? value.substring(0, 10) : value
     },
     sendComment(id_post) {
+      console.log(id_post)
       let date = Date.now();
-      console.log(this.$refs[id_post][0])
+      console.log(this.$refs[id_post])
       let comment = this.$refs[id_post][0].localValue;
       let commentData = {
         id_user: this.user_id,
@@ -153,6 +154,7 @@ export default {
       else {
         Axios.post(this.url + "/comments/saveComment", commentData)
           .then((res) => {
+            this.getPostData()
             alert(res.data);
           })
           .catch((err) => {
