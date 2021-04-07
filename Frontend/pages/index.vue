@@ -171,6 +171,7 @@
               </div>
             </template>
           </b-card>
+          <b-table striped hover :items="item.comments" :fields="fields2" ></b-table>
           <b-input-group :prepend="nickname">
             <b-form-textarea
               class="comment-input"
@@ -182,7 +183,7 @@
               <b-button @click="sendComment(item._id)">Comentar</b-button>
             </b-input-group-append>
           </b-input-group>
-          <b-table striped hover :items="item.comments" :fields="fields2" ></b-table>
+
         </b-list-group-item>
       </b-list-group>
 

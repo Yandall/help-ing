@@ -70,6 +70,7 @@
               </div>
             </template>
           </b-card>
+      <b-table striped hover :items="post.comments" :fields="fields" ></b-table>
           <b-input-group :prepend="nickname">
             <b-form-textarea
               class="comment-input"
@@ -101,6 +102,12 @@ export default {
   data() {
     var date = Date.now()
     return {
+      fields:[{key:'user', label:'Usuario'},{key:'comment', label: 'Comentario'},{
+        // A virtual column with custom formatter
+        key: 'date',
+        label: 'Fecha comentario',
+        formatter:'dateSimplified'
+      }],
       post:{
 
         coments:[],
@@ -129,6 +136,9 @@ export default {
   },
 
   methods: {
+    dateSimplified(value){
+      return value!=null ? value.substring(0, 10) : value
+    },
     sendComment(id_post) {
       let date = Date.now();
       console.log(this.$refs[id_post][0])
