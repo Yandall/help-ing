@@ -70,6 +70,17 @@
               </div>
             </template>
           </b-card>
+          <b-input-group :prepend="nickname">
+            <b-form-textarea
+              class="comment-input"
+              maxlength="300"
+              :ref="id"
+              :id="id"
+            ></b-form-textarea>
+            <b-input-group-append>
+              <b-button @click="sendComment(id)">Comentar</b-button>
+            </b-input-group-append>
+          </b-input-group>
     </div>
 
   </div>
@@ -118,6 +129,29 @@ export default {
   },
 
   methods: {
+    sendComment(id_post) {
+      let date = Date.now();
+      let comment = this.$refs[id_post][0].localValue;
+      let commentData = {
+        id_user: this.user_id,
+        id_post: id_post,
+        date: date,
+        comment: comment,
+      };
+      if (comment == "") alert("Por favor escribe un comentario");
+      else {
+        Axios.post(this.url + "/comments/saveComment", commentData)
+          .then((res) => {
+            alert(res.data);
+          })
+          .catch((err) => {
+            alert(err.response);
+          })
+          .finally(() => {
+            this.$refs[id_post][0].localValue = "";
+          });
+      }
+    },
 
     /**
      * Método para validar que el token que esta en el local storage si sea un token valido
