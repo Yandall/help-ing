@@ -152,7 +152,7 @@ export default {
       else {
         Axios.post(this.url + "/comments/saveComment", commentData)
           .then((res) => {
-            this.getPostData()
+            this.loadPost()
             alert(res.data);
           })
           .catch((err) => {
