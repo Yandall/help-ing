@@ -131,6 +131,7 @@ export default {
   methods: {
     sendComment(id_post) {
       let date = Date.now();
+      console.log(this.$refs[id_post][0])
       let comment = this.$refs[id_post][0].localValue;
       let commentData = {
         id_user: this.user_id,
