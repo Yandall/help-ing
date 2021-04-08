@@ -33,10 +33,10 @@ async function getPosts(req, res) {
         let pipeline = [...postPipeline]
         pipeline.splice(0,1)
         let pageNumber = req.params.page
-        let topic = req.params.topic
+        let topic = req.params.topic.toString()
         let nPerPage = 5
         let dbo = connection.db('helping')
-        let filter = topic != "home" ? {'topic': topic.replace('_', " ")} : {}
+        let filter = topic != "home" ? {'topic': topic.split('_').join(' ')} : {}
         console.log(filter)
         pipeline.push({"$match": filter})
         let cursor = dbo.collection('posts').aggregate(pipeline)
@@ -115,6 +115,7 @@ async function saveFile(req, res) {
             author: req.body.author,
             post_date: req.body.post_date,
             file: req.body.file,
+            topic: req.body.topic,
             likes: []
         }
         console.log(post.post_date)
