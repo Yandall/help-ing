@@ -264,7 +264,7 @@ export default {
 
       ],
       numberPages: 1,
-      perPage: 10,
+      perPage: 5,
       typeSearch: "title",
       search: "",
       mod: false,

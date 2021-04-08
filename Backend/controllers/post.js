@@ -37,11 +37,14 @@ async function getPosts(req, res) {
         let nPerPage = 5
         let dbo = connection.db('helping')
         let filter = topic != "home" ? {'topic': topic.replace('_', " ")} : {}
+        console.log(filter)
+        pipeline.push({"$match": filter})
         let cursor = dbo.collection('posts').aggregate(pipeline)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
             .limit(nPerPage)
         let values = await cursor.toArray()
         let cantPosts = await dbo.collection('posts').countDocuments(filter)
+        console.log(cantPosts)
         res.status(200).send({values, cantPosts})
 
     } catch (e) {
