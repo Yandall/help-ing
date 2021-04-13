@@ -49,6 +49,11 @@ const fs = require('fs')
     }
 }
 
+/**
+ * Método para mostrar todos los post reportados
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
 async function getReportedPosts(req, res) {
     const connection = await db.getConnection()
     try {
