@@ -107,7 +107,7 @@
           class="card-post"
           style="border: none"
         >
-          <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
+
           <b-card
             :img-src="item.file"
             img-alt=""
@@ -115,8 +115,10 @@
             img-top
             style="max-width: 60rem"
             class="mb-2"
+            header-tag="header"
             footer-tag="footer"
           >
+            <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
             <b-card-text>
               {{ item.body }}
 
@@ -140,7 +142,7 @@
               }}</b-link>
             </div>
 
-            <template #footer>
+            <template #header>
               <div class="post-footer">
                 <div v-if="!item.likes.includes(user_id)">
                   <b-button
@@ -170,8 +172,21 @@
                 </div>
               </div>
             </template>
+
+            <template #footer>
+              <div v-for="(comment, index) in item.comments" style="margin-bottom:1.5rem">
+                <b-row align-h="start">
+                  <b-col cols="auto" align-self="start">{{comment.user}}</b-col>
+                  <b-col cols="auto" align-self="start">{{dateSimplified(comment.date)}}</b-col>
+                </b-row>
+                  <b-row class="commentRow" align="h-start">
+                    <b-col cols="12" md="auto" align-self="start">{{comment.comment}}</b-col>
+
+                  </b-row></div>
+            </template>
           </b-card>
-          <b-table striped hover :items="item.comments" :fields="fields2" ></b-table>
+
+
           <b-input-group :prepend="nickname">
             <b-form-textarea
               class="comment-input"
@@ -657,6 +672,14 @@ body {
 .title-link:hover {
   cursor:pointer;
   text-decoration:underline ;
+}
+
+.commentRow{
+  border-radius: 0px 15px 15px 15px;
+  margin: 0 0 1rem 0;
+  background-color:lightgrey;
+  padding: 0.5rem;
+  text-align: left;
 }
 
 </style>
