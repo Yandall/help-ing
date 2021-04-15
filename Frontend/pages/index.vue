@@ -154,6 +154,13 @@
                     <b-icon icon="heart-fill" aria-label="Help"></b-icon>
                     <p>{{ item.nlikes }}</p>
                   </b-button>
+                  <b-button
+            
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="reportPost(item)"
+                  >reportar</b-button>
                 </div>
                 <div v-else>
                   <b-button
@@ -543,6 +550,10 @@ export default {
     getPostData(id){
     localStorage.setItem("id_post", id);
     location.assign("singlePost")
+    },
+
+    reportPost(item){
+      console.log("post " + item._id + " reportado")
     }
   },
 };
