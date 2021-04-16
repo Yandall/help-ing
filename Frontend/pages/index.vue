@@ -553,7 +553,18 @@ export default {
     },
 
     reportPost(item){
-      console.log("post " + item._id + " reportado")
+
+      let report = { id_post: item._id, id_user: this.user_id };
+      Axios.post(this.url + "/reported_post/saveReportedPost", report)
+        .then((res) => {
+          console.log("post " + item._id + " reportado")
+          alert("post " + item.title + " reportado")
+          console.log(res)
+        })
+        .catch((e) => {
+          alert('Ya haz reportado este post')
+          console.log(e)
+        });
     }
   },
 };
