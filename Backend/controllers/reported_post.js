@@ -50,7 +50,7 @@ const fs = require('fs')
 }
 
 /**
- * Método para mostrar todos los post reportados
+ * Método para mostrar todos los post reportados que tienen el estado open en true
  * @param {*} req petición enviada desde el front
  * @param {*} res contiene la respuesta de la petición http 
  */
@@ -58,7 +58,7 @@ async function getReportedPosts(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db("helping")
-        let cursor = dbo.collection("reported_posts").find({})
+        let cursor = dbo.collection("reported_posts").find({"open":true})
         let values = await cursor.toArray()
         res.status(200).send(values)
     } catch (e) {
@@ -98,9 +98,33 @@ async function deleteReportedPost(req, res){
     }
 }
 
+/**
+ * Método para actulizar el estado del post resportado de true a false(ya no queda reportado el post)
+ * @param {*} req petición enviada desde el front
+ * @param {*} res contiene la respuesta de la petición http 
+ */
+ async function updateReportedPost(req, res) {
+    const connection = await db.getConnection()
+    try {
+        let dbo = connection.db("helping")
+        let query = {"id_post": mongo.ObjectId(req.params.id_post)}
+        let update = {$set:{"open":false}};
+        await dbo.collection('reported_posts').updateOne(query, update);
+        res.status(200).send('El post fue actualizado exitosamente')
+    } catch (e) {
+        res.status(500).send("Hubo un error")
+        console.error(e)
+    } finally {
+        if(connection.isConnected()){
+            await connection.close()
+        }
+    }
+}
+
 //se exportan los métodos y funciones para usarlos despues
 module.exports = {
     saveReportedPost, 
     getReportedPosts,
-    deleteReportedPost
+    deleteReportedPost,
+    updateReportedPost
 }

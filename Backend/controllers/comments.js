@@ -71,7 +71,6 @@ async function getComments(req, res) {
             await connection.close()
         }
     }
-
 }
 
 //se exportan los métodos y funciones para usarlos despues
