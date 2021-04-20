@@ -89,12 +89,8 @@
   </b-navbar>
   <div class="container">
 
-
-
-
     <h1 class="title1">Create new post</h1>
-
-
+    
     <div>
       <b-form v-if="show" @submit="onSubmit" class="form">
         <b-form-group label="Title" label-for="title">

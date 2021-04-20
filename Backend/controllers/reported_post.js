@@ -72,8 +72,35 @@ async function getReportedPosts(req, res) {
 
 }
 
+async function deleteReportedPost(req, res){
+    const connection = await db.getConnection()
+    try{
+        let dbo = connection.db('helping')
+        let id_post = mongo.ObjectId(req.body.id_post)
+        dbo.collection('reported_posts').deleteOne({id_post: id_post})
+        .then(bd_res => {
+            dbo.collection('comments').deleteOne({id_post: id_post})
+            .then(bd_res => {
+                dbo.collection('posts').deleteOne({_id: id_post})
+                .then(bd_res => {
+                    if(bd_res.deletedCount > 0) res.status(200).send("Post eliminado correctamente")
+                    else res.status(500).send("Hubo un error al eliminar el post")
+                }).finally(final => {
+                    if(connection.isConnected()){
+                        connection.close()
+                    }
+                }) 
+            })
+        })
+    } catch (e) {
+        console.error(e)
+        res.status(500).send("Hubo un error al eliminar el post")
+    }
+}
+
 //se exportan los métodos y funciones para usarlos despues
 module.exports = {
     saveReportedPost, 
-    getReportedPosts
+    getReportedPosts,
+    deleteReportedPost
 }

@@ -143,8 +143,8 @@
             </div>
 
             <template #header>
-              <div class="post-footer">
-                <div v-if="!item.likes.includes(user_id)">
+              <div class="post-header">
+                <div v-if="!item.likes.includes(user_id)" style="display:flex;">
                   <b-button
                     size="sm"
                     variant="secondary"
@@ -160,7 +160,7 @@
                     variant="secondary"
                     class="mb-2 like-button-no-vote"
                     @click="reportPost(item)"
-                  >reportar</b-button>
+                  >Reportar</b-button>
                 </div>
                 <div v-else>
                   <b-button
@@ -181,7 +181,7 @@
             </template>
 
             <template #footer>
-              <div v-for="(comment, index) in item.comments" style="margin-bottom:1.5rem">
+              <div v-for="(comment, index) in item.comments" :key="index" style="margin-bottom:1.5rem">
                 <b-row align-h="start">
                   <b-col cols="auto" align-self="start">{{comment.user}}</b-col>
                   <b-col cols="auto" align-self="start">{{dateSimplified(comment.date)}}</b-col>
@@ -411,6 +411,28 @@ export default {
       const regex = /.pdf/;
       return ".pdf" == url.match(regex);
     },
+    /**
+     * Metodo para almacenar el id de un post en el localstorage para ser accedido por el mediante otra url
+     */
+    getPostData(id){
+    localStorage.setItem("id_post", id);
+    location.assign("singlePost")
+    },
+
+  
+    reportPost(item){
+      let report = { id_post: item._id, id_user: this.user_id };
+      Axios.post(this.url + "/reported_post/saveReportedPost", report)
+        .then((res) => {
+          console.log("post " + item._id + " reportado")
+          alert("post " + item.title + " reportado")
+          console.log(res)
+        })
+        .catch((e) => {
+          alert('Ya haz reportado este post')
+          console.log(e)
+        });
+    },
 
     //Metodos del navbar
 
@@ -544,28 +566,7 @@ export default {
       this.$refs["modalCreateTopic"].show();
     },
 
-    /**
-     * Metodo para almacenar el id de un post en el localstorage para ser accedido por el mediante otra url
-     */
-    getPostData(id){
-    localStorage.setItem("id_post", id);
-    location.assign("singlePost")
-    },
-
-    reportPost(item){
-
-      let report = { id_post: item._id, id_user: this.user_id };
-      Axios.post(this.url + "/reported_post/saveReportedPost", report)
-        .then((res) => {
-          console.log("post " + item._id + " reportado")
-          alert("post " + item.title + " reportado")
-          console.log(res)
-        })
-        .catch((e) => {
-          alert('Ya haz reportado este post')
-          console.log(e)
-        });
-    }
+    
   },
 };
 </script>
@@ -604,7 +605,7 @@ export default {
   background-color: #a00001;
 }
 
-.post-footer {
+.post-header {
   height: inherit;
   width: inherit;
   display: flex;
