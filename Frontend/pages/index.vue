@@ -49,6 +49,14 @@
             :to="{ name: 'universalContent' }"
             >Contenido Universal
           </b-button>
+          <b-button
+            variant="light"
+            size="sm"
+            v-if="mod"
+            style="margin-inline: 5px"
+            :to="{ name: 'reported_posts' }"
+            >Reportados
+          </b-button>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -107,7 +115,6 @@
           class="card-post"
           style="border: none"
         >
-
           <b-card
             :img-src="item.file"
             img-alt=""
@@ -480,8 +487,6 @@ export default {
           console.log(error);
 
         });
-
-
     },
     /**
      * Método para buscar un Post en especifico enviando petición(get) con filtro al backend y mostrarlo en el frontend

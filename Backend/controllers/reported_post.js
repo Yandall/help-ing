@@ -58,7 +58,7 @@ async function getReportedPosts(req, res) {
     const connection = await db.getConnection()
     try {
         let dbo = connection.db("helping")
-        let cursor = dbo.collection("reported_posts").find({"open":true})
+        let cursor = dbo.collection("reported_posts").aggregate(reportedPipeline)
         let values = await cursor.toArray()
         res.status(200).send(values)
     } catch (e) {
@@ -76,7 +76,8 @@ async function deleteReportedPost(req, res){
     const connection = await db.getConnection()
     try{
         let dbo = connection.db('helping')
-        let id_post = mongo.ObjectId(req.body.id_post)
+        let id_post = mongo.ObjectId(req.params.id_post)
+        console.log('id_post: ',id_post)
         dbo.collection('reported_posts').deleteOne({id_post: id_post})
         .then(bd_res => {
             dbo.collection('comments').deleteOne({id_post: id_post})
@@ -110,6 +111,7 @@ async function deleteReportedPost(req, res){
         let query = {"id_post": mongo.ObjectId(req.params.id_post)}
         let update = {$set:{"open":false}};
         await dbo.collection('reported_posts').updateOne(query, update);
+        console.log({query, update})
         res.status(200).send('El post fue actualizado exitosamente')
     } catch (e) {
         res.status(500).send("Hubo un error")
@@ -120,6 +122,21 @@ async function deleteReportedPost(req, res){
         }
     }
 }
+
+var reportedPipeline = [
+    {
+      '$match': {
+        'open': true
+      }
+    }, {
+      '$lookup': {
+        'from': 'posts', 
+        'localField': 'id_post', 
+        'foreignField': '_id', 
+        'as': 'post'
+      }
+    }
+  ]
 
 //se exportan los métodos y funciones para usarlos despues
 module.exports = {
