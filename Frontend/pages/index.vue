@@ -162,14 +162,13 @@
                     <p>{{ item.nlikes }}</p>
                   </b-button>
                   <b-button
-            
                     size="sm"
                     variant="secondary"
                     class="mb-2 like-button-no-vote"
                     @click="reportPost(item)"
                   >Reportar</b-button>
                 </div>
-                <div v-else>
+                <div v-else style="display:flex;">
                   <b-button
                     size="sm"
                     variant="secondary"
@@ -179,6 +178,12 @@
                     <b-icon icon="heart-fill" aria-label="Help"></b-icon>
                     <p>{{ item.nlikes }}</p>
                   </b-button>
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="reportPost(item)"
+                  >Reportar</b-button>
                 </div>
 
                 <div class="post-footer-info">
