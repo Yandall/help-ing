@@ -7,7 +7,7 @@ const reportedPost_controller = require('../controllers/reported_post')
 router.post('/saveReportedPost', reportedPost_controller.saveReportedPost)
 //endpoint para obtener todos los post reportados
 router.get('/', reportedPost_controller.getReportedPosts)
-router.delete('/', reportedPost_controller.deleteReportedPost)
+router.delete('/:id_post', reportedPost_controller.deleteReportedPost)
 //endpoint para actualizar el post reportado
 router.post('/:id_post', reportedPost_controller.updateReportedPost)
 

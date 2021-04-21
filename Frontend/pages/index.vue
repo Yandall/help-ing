@@ -49,6 +49,14 @@
             :to="{ name: 'universalContent' }"
             >Contenido Universal
           </b-button>
+          <b-button
+            variant="light"
+            size="sm"
+            v-if="mod"
+            style="margin-inline: 5px"
+            :to="{ name: 'reported_posts' }"
+            >Reportados
+          </b-button>
 
           <b-button
             variant="light"
@@ -102,34 +110,32 @@
       <p class="my-4">Correo electronico: {{ email }}</p>
     </b-modal>
 
+    <div class="container">
+      <h1 class="title" id="home.title" v-if="!isSearching">
+        Ultimas publicaciones
+      </h1>
+      <h1 class="title" id="home.search" v-if="isSearching">Búsqueda</h1>
 
-          <div class="container">
-
-            <h1 class="title" id="home.title" v-if="!isSearching">
-              Ultimas publicaciones
-            </h1>
-            <h1 class="title" id="home.search" v-if="isSearching">Búsqueda</h1>
-            <b-list-group>
-              <b-list-group-item
-                :key="item._id"
-                v-for="item in post_list"
-                class="card-post"
-                style="border: none"
-              >
-
-                <b-card
-                  :img-src="item.file"
-                  img-alt=""
-                  tag="article"
-                  img-top
-                  style="max-width: 60rem"
-                  class="mb-2"
-                  header-tag="header"
-                  footer-tag="footer"
-                >
-                  <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
-                  <b-card-text>
-                    {{ item.body }}
+      <b-list-group>
+        <b-list-group-item
+          :key="item._id"
+          v-for="item in post_list"
+          class="card-post"
+          style="border: none"
+        >
+          <b-card
+            :img-src="item.file"
+            img-alt=""
+            tag="article"
+            img-top
+            style="max-width: 60rem"
+            class="mb-2"
+            header-tag="header"
+            footer-tag="footer"
+          >
+            <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
+            <b-card-text>
+              {{ item.body }}
 
                     <br />Tags:
                     <b-badge
@@ -151,37 +157,42 @@
                     }}</b-link>
                   </div>
 
-                  <template #header>
-                    <div class="post-header">
-                      <div v-if="!item.likes.includes(user_id)" style="display:flex;">
-                        <b-button
-                          size="sm"
-                          variant="secondary"
-                          class="mb-2 like-button-no-vote"
-                          @click="updateLike(item, false)"
-                        >
-                          <b-icon icon="heart-fill" aria-label="Help"></b-icon>
-                          <p>{{ item.nlikes }}</p>
-                        </b-button>
-                        <b-button
-
-                          size="sm"
-                          variant="secondary"
-                          class="mb-2 like-button-no-vote"
-                          @click="reportPost(item)"
-                        >Reportar</b-button>
-                      </div>
-                      <div v-else>
-                        <b-button
-                          size="sm"
-                          variant="secondary"
-                          class="mb-2 like-button-vote"
-                          @click="updateLike(item, true)"
-                        >
-                          <b-icon icon="heart-fill" aria-label="Help"></b-icon>
-                          <p>{{ item.nlikes }}</p>
-                        </b-button>
-                      </div>
+            <template #header>
+              <div class="post-header">
+                <div v-if="!item.likes.includes(user_id)" style="display:flex;">
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="updateLike(item, false)"
+                  >
+                    <b-icon icon="heart-fill" aria-label="Help"></b-icon>
+                    <p>{{ item.nlikes }}</p>
+                  </b-button>
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="reportPost(item)"
+                  >Reportar</b-button>
+                </div>
+                <div v-else style="display:flex;">
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-vote"
+                    @click="updateLike(item, true)"
+                  >
+                    <b-icon icon="heart-fill" aria-label="Help"></b-icon>
+                    <p>{{ item.nlikes }}</p>
+                  </b-button>
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="reportPost(item)"
+                  >Reportar</b-button>
+                </div>
 
                       <div class="post-footer-info">
                         {{ item.author }} {{ item.post_date }}
@@ -231,7 +242,6 @@
 
 
            </div>
-
 
     <b-modal ref="modalCreateTopic" hide-footer title="Crear Tema">
       <form ref="form" @submit.stop.prevent="solicitud">
@@ -585,7 +595,7 @@ export default {
 
 <style scoped>
 .container {
-  margin: 100px auto;
+  margin: 0 auto;
   min-height: 100vh;
   max-width: 900px;
   display: flex;
@@ -703,7 +713,6 @@ body {
   font-size: 1.2rem;
   font-family: sans-serif;
 }
-
 
 .title-link:hover {
   cursor:pointer;

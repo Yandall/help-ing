@@ -71,18 +71,23 @@
         >
          <b-card
             :title="item.title"
-            :img-src="item.icon"
+            :img-src="item.file"
             img-alt=""
             img-top
             style="max-width: 45rem;"
-            class="mb-2"
-
-            :footer="item.url">
+            class="mb-2">
               <b-card-text>
                Autor: {{item.author}}
                <br>
                Tipo: {{item.type}}
 
+              <br>
+              <b-link v-if="checkPDFFormat(item.file)" :href="item.file">{{
+                item.file
+              }}</b-link>
+                <b-link v-else-if="checkUrl(item.url)" :href="item.url">{{
+                item.url
+              }}</b-link>
               <br>
             </b-card-text>
             <div></div>
@@ -168,6 +173,18 @@ export default {
       searchPost() {
         //TO DO
       },
+
+      /**
+     * Método para chequear el formato del pdf
+     */
+    checkPDFFormat(url) {
+      const regex = /.pdf/;
+      return ".pdf" == url.match(regex);
+    },
+
+    checkUrl(url){
+      return url != null || url != ''
+    }
 
 
     }

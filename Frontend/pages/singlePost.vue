@@ -1,11 +1,53 @@
 <template>
-  <div class="container">
-    <h1 class="title1">single post
-      <b-button :to="{name: 'index'}" style="text-align: left">Back</b-button>
-    </h1>
+  <div>
+    <b-navbar toggleable="lg" type="dark">
+      <b-navbar-brand href="/">Helping</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-button
+            variant="light"
+            size="sm"
+            style="margin-inline: 5px"
+            :to="{ name: 'universalContent' }"
+            >Contenido Universal
+          </b-button>
+          <b-button
+            variant="light"
+            size="sm"
+            v-if="mod"
+            style="margin-inline: 5px"
+            :to="{ name: 'reported_posts' }"
+            >Reportados
+          </b-button>
+        </b-navbar-nav>
+
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <em>Usuario</em>
+            </template>
+            <b-dropdown-item href="#" v-b-modal.modal-1>Perfil</b-dropdown-item>
+            <b-dropdown-item href="#" @click="logOut">Salir</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+
+    <b-modal id="modal-1" title="Perfil">
+      <img :src="image" height="100" width="100" style="margin: 10px" />
+      <p class="my-4">Nombre de usuario: {{ nickname }}</p>
+      <p class="my-4">Correo electronico: {{ email }}</p>
+    </b-modal>
+    
 
 
-    <div>
+    <div class="container">
+      <h1 class="title1">single post</h1>
       <h2>{{ post.title }}</h2>
           <b-card
             :img-src="post.file"
@@ -15,6 +57,7 @@
             style="max-width: 60rem"
             class="mb-2"
             footer-tag="footer"
+            header-tag="header"
           >
             <b-card-text>
               {{ post.body }}
@@ -39,9 +82,9 @@
               }}</b-link>
             </div>
 
-            <template #footer>
-              <div class="post-footer">
-                <div v-if="!post.likes.includes(user_id)">
+            <template #header>
+              <div class="post-header">
+                <div v-if="!post.likes.includes(user_id)" style="display:flex;">
                   <b-button
                     size="sm"
                     variant="secondary"
@@ -51,8 +94,14 @@
                     <b-icon icon="heart-fill" aria-label="Help"></b-icon>
                     <p>{{ post.nlikes }}</p>
                   </b-button>
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="reportPost(post)"
+                  >Reportar</b-button>
                 </div>
-                <div v-else>
+                <div v-else style="display:flex;">
                   <b-button
                     size="sm"
                     variant="secondary"
@@ -62,15 +111,33 @@
                     <b-icon icon="heart-fill" aria-label="Help"></b-icon>
                     <p>{{ post.nlikes }}</p>
                   </b-button>
+                  <b-button
+                    size="sm"
+                    variant="secondary"
+                    class="mb-2 like-button-no-vote"
+                    @click="reportPost(post)"
+                  >Reportar</b-button>
                 </div>
+                
 
                 <div class="post-footer-info">
                   {{ post.author }} {{ post.post_date }}
                 </div>
               </div>
             </template>
+            <template #footer>
+              <div v-for="(comment, index) in post.comments" :key="index" style="margin-bottom:1.5rem">
+                <b-row align-h="start">
+                  <b-col cols="auto" align-self="start">{{comment.user}}</b-col>
+                  <b-col cols="auto" align-self="start">{{dateSimplified(comment.date)}}</b-col>
+                </b-row>
+                  <b-row class="commentRow" align="h-start">
+                    <b-col cols="12" md="auto" align-self="start">{{comment.comment}}</b-col>
+
+                  </b-row></div>
+            </template>
           </b-card>
-      <b-table striped hover :items="post.comments" :fields="fields" ></b-table>
+
           <b-input-group :prepend="nickname">
             <b-form-textarea
               class="comment-input"
@@ -110,7 +177,7 @@ export default {
       }],
       post:{
         _id:'',
-        coments:[],
+        comments:[],
         title:'',
         body:'',
         tags:'',
@@ -126,7 +193,9 @@ export default {
       email: "",
       image: "",
       user_id: "",
-      token: ""
+      token: "",
+      range: "",
+      mod: false,
     }
   },
   computed: {
@@ -264,7 +333,54 @@ export default {
      */
     getPostData(){
     this.id = localStorage.getItem("id_post");
-    }
+    },
+
+    reportPost(item){
+      let report = { id_post: item._id, id_user: this.user_id };
+      Axios.post(this.url + "/reported_post/saveReportedPost", report)
+        .then((res) => {
+          console.log("post " + item._id + " reportado")
+          alert("post " + item.title + " reportado")
+          console.log(res)
+        })
+        .catch((e) => {
+          alert('Ya haz reportado este post')
+          console.log(e)
+        });
+    },
+
+    //Navbar methods
+
+    logOut() {
+      this.$router.push("/login");
+      document.cookie = `token=`;
+    },
+
+    /**
+     * Método para cargar los datos al localStorage de la persona que esta logueada en la aplicación
+     */
+    loadProfile() {
+      let url = config.url_api + "/login/decode";
+      Axios.get(url, { headers: { token: this.token } })
+        .then((response) => {
+          let user = response.data.data;
+          this.nickname = user.nickname;
+          this.email = user.email;
+          this.user_id = user._id;
+          this.range = user.range;
+          this.image = user.image
+            ? user.image
+            : "https://external-content.duckduckgo.com/iu/" +
+              "?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP." +
+              "PB3QCTk1kCZZ6ZvvVqpM5gHaHa%26pid%3DApi&f=1";
+          this.mod = this.range == 2;
+          //console.log("User", user);
+        })
+        .catch((error) => {
+          console.log("Error");
+          console.log(error);
+        });
+    },
   }
 }
 </script>
@@ -304,7 +420,7 @@ export default {
   background-color: #a00001;
 }
 
-.post-footer {
+.post-header {
   height: inherit;
   width: inherit;
   display: flex;
@@ -381,5 +497,13 @@ export default {
 .comment-input {
   resize: none;
   height: 2.5rem;
+}
+
+.commentRow{
+  border-radius: 0px 15px 15px 15px;
+  margin: 0 0 1rem 0;
+  background-color:lightgrey;
+  padding: 0.5rem;
+  text-align: left;
 }
 </style>
