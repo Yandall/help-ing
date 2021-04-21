@@ -49,6 +49,14 @@
             :to="{ name: 'universalContent' }"
             >Contenido Universal
           </b-button>
+
+          <b-button
+            variant="light"
+            size="sm"
+            style="margin-inline: 5px"
+            :to="{ name: 'advisory' }"
+          >Calendario Asesorias
+          </b-button>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -94,132 +102,136 @@
       <p class="my-4">Correo electronico: {{ email }}</p>
     </b-modal>
 
-    <div class="container">
-      <h1 class="title" id="home.title" v-if="!isSearching">
-        Ultimas publicaciones
-      </h1>
-      <h1 class="title" id="home.search" v-if="isSearching">Búsqueda</h1>
 
-      <b-list-group>
-        <b-list-group-item
-          :key="item._id"
-          v-for="item in post_list"
-          class="card-post"
-          style="border: none"
-        >
+          <div class="container">
 
-          <b-card
-            :img-src="item.file"
-            img-alt=""
-            tag="article"
-            img-top
-            style="max-width: 60rem"
-            class="mb-2"
-            header-tag="header"
-            footer-tag="footer"
-          >
-            <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
-            <b-card-text>
-              {{ item.body }}
+            <h1 class="title" id="home.title" v-if="!isSearching">
+              Ultimas publicaciones
+            </h1>
+            <h1 class="title" id="home.search" v-if="isSearching">Búsqueda</h1>
+            <b-list-group>
+              <b-list-group-item
+                :key="item._id"
+                v-for="item in post_list"
+                class="card-post"
+                style="border: none"
+              >
 
-              <br />Tags:
-              <b-badge
-                pill
-                variant="secondary"
-                v-for="(tag, index) in item.tags"
-                :key="index"
-                style="margin-right: 5px"
-                >{{ tag }}
-              </b-badge>
-            </b-card-text>
-            <div class="link_file">
-              <b-icon
-                icon="file-earmark-arrow-down"
-                v-if="checkPDFFormat(item.file)"
-              ></b-icon>
-              <b-link v-if="checkPDFFormat(item.file)" :href="item.file">{{
-                item.file
-              }}</b-link>
+                <b-card
+                  :img-src="item.file"
+                  img-alt=""
+                  tag="article"
+                  img-top
+                  style="max-width: 60rem"
+                  class="mb-2"
+                  header-tag="header"
+                  footer-tag="footer"
+                >
+                  <h2 class="title-link" @click="getPostData(item._id)">{{ item.title }}</h2>
+                  <b-card-text>
+                    {{ item.body }}
+
+                    <br />Tags:
+                    <b-badge
+                      pill
+                      variant="secondary"
+                      v-for="(tag, index) in item.tags"
+                      :key="index"
+                      style="margin-right: 5px"
+                      >{{ tag }}
+                    </b-badge>
+                  </b-card-text>
+                  <div class="link_file">
+                    <b-icon
+                      icon="file-earmark-arrow-down"
+                      v-if="checkPDFFormat(item.file)"
+                    ></b-icon>
+                    <b-link v-if="checkPDFFormat(item.file)" :href="item.file">{{
+                      item.file
+                    }}</b-link>
+                  </div>
+
+                  <template #header>
+                    <div class="post-header">
+                      <div v-if="!item.likes.includes(user_id)" style="display:flex;">
+                        <b-button
+                          size="sm"
+                          variant="secondary"
+                          class="mb-2 like-button-no-vote"
+                          @click="updateLike(item, false)"
+                        >
+                          <b-icon icon="heart-fill" aria-label="Help"></b-icon>
+                          <p>{{ item.nlikes }}</p>
+                        </b-button>
+                        <b-button
+
+                          size="sm"
+                          variant="secondary"
+                          class="mb-2 like-button-no-vote"
+                          @click="reportPost(item)"
+                        >Reportar</b-button>
+                      </div>
+                      <div v-else>
+                        <b-button
+                          size="sm"
+                          variant="secondary"
+                          class="mb-2 like-button-vote"
+                          @click="updateLike(item, true)"
+                        >
+                          <b-icon icon="heart-fill" aria-label="Help"></b-icon>
+                          <p>{{ item.nlikes }}</p>
+                        </b-button>
+                      </div>
+
+                      <div class="post-footer-info">
+                        {{ item.author }} {{ item.post_date }}
+                      </div>
+                    </div>
+                  </template>
+
+                  <template #footer>
+                    <div v-for="(comment, index) in item.comments" :key="index" style="margin-bottom:1.5rem">
+                      <b-row align-h="start">
+                        <b-col cols="auto" align-self="start">{{comment.user}}</b-col>
+                        <b-col cols="auto" align-self="start">{{dateSimplified(comment.date)}}</b-col>
+                      </b-row>
+                        <b-row class="commentRow" align="h-start">
+                          <b-col cols="12" md="auto" align-self="start">{{comment.comment}}</b-col>
+
+                        </b-row></div>
+                  </template>
+                </b-card>
+
+
+                <b-input-group :prepend="nickname">
+                  <b-form-textarea
+                    class="comment-input"
+                    maxlength="300"
+                    :ref="item._id"
+                    :id="item._id"
+                  ></b-form-textarea>
+                  <b-input-group-append>
+                    <b-button @click="sendComment(item._id)">Comentar</b-button>
+                  </b-input-group-append>
+                </b-input-group>
+
+              </b-list-group-item>
+            </b-list-group>
+            <div class="overflow-auto">
+              <b-pagination-nav
+                v-if="!isSearching"
+                :link-gen="linkGen"
+                :number-of-pages="numberPages"
+                use-router
+                @change="loadPosts"
+                align="center"
+              ></b-pagination-nav>
             </div>
 
-            <template #header>
-              <div class="post-header">
-                <div v-if="!item.likes.includes(user_id)" style="display:flex;">
-                  <b-button
-                    size="sm"
-                    variant="secondary"
-                    class="mb-2 like-button-no-vote"
-                    @click="updateLike(item, false)"
-                  >
-                    <b-icon icon="heart-fill" aria-label="Help"></b-icon>
-                    <p>{{ item.nlikes }}</p>
-                  </b-button>
-                  <b-button
-            
-                    size="sm"
-                    variant="secondary"
-                    class="mb-2 like-button-no-vote"
-                    @click="reportPost(item)"
-                  >Reportar</b-button>
-                </div>
-                <div v-else>
-                  <b-button
-                    size="sm"
-                    variant="secondary"
-                    class="mb-2 like-button-vote"
-                    @click="updateLike(item, true)"
-                  >
-                    <b-icon icon="heart-fill" aria-label="Help"></b-icon>
-                    <p>{{ item.nlikes }}</p>
-                  </b-button>
-                </div>
-
-                <div class="post-footer-info">
-                  {{ item.author }} {{ item.post_date }}
-                </div>
-              </div>
-            </template>
-
-            <template #footer>
-              <div v-for="(comment, index) in item.comments" :key="index" style="margin-bottom:1.5rem">
-                <b-row align-h="start">
-                  <b-col cols="auto" align-self="start">{{comment.user}}</b-col>
-                  <b-col cols="auto" align-self="start">{{dateSimplified(comment.date)}}</b-col>
-                </b-row>
-                  <b-row class="commentRow" align="h-start">
-                    <b-col cols="12" md="auto" align-self="start">{{comment.comment}}</b-col>
-
-                  </b-row></div>
-            </template>
-          </b-card>
 
 
-          <b-input-group :prepend="nickname">
-            <b-form-textarea
-              class="comment-input"
-              maxlength="300"
-              :ref="item._id"
-              :id="item._id"
-            ></b-form-textarea>
-            <b-input-group-append>
-              <b-button @click="sendComment(item._id)">Comentar</b-button>
-            </b-input-group-append>
-          </b-input-group>
+           </div>
 
-        </b-list-group-item>
-      </b-list-group>
-
-      <div class="overflow-auto">
-        <b-pagination-nav
-          v-if="!isSearching"
-          :link-gen="linkGen"
-          :number-of-pages="numberPages"
-          use-router
-          @change="loadPosts"
-          align="center"
-        ></b-pagination-nav>
-      </div>
-    </div>
 
     <b-modal ref="modalCreateTopic" hide-footer title="Crear Tema">
       <form ref="form" @submit.stop.prevent="solicitud">
@@ -419,7 +431,7 @@ export default {
     location.assign("singlePost")
     },
 
-  
+
     reportPost(item){
       let report = { id_post: item._id, id_user: this.user_id };
       Axios.post(this.url + "/reported_post/saveReportedPost", report)
@@ -566,14 +578,14 @@ export default {
       this.$refs["modalCreateTopic"].show();
     },
 
-    
+
   },
 };
 </script>
 
 <style scoped>
 .container {
-  margin: 0 auto;
+  margin: 100px auto;
   min-height: 100vh;
   max-width: 900px;
   display: flex;
@@ -691,6 +703,7 @@ body {
   font-size: 1.2rem;
   font-family: sans-serif;
 }
+
 
 .title-link:hover {
   cursor:pointer;
