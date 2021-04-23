@@ -595,7 +595,7 @@ export default {
 
 <style scoped>
 .container {
-  margin: 0 auto;
+  margin: 100px auto;
   min-height: 100vh;
   max-width: 900px;
   display: flex;
